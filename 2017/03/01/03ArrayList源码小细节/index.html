@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     
-    <title>Hello World | Little Piggy</title>
+    <title>Little Piggy</title>
     <meta name="renderer" content="webkit">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -15,11 +15,11 @@
     <meta name="description" content="Android">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Hello World | Little Piggy">
+    <meta name="twitter:title" content="Little Piggy">
     <meta name="twitter:description" content="Android">
 
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Hello World | Little Piggy">
+    <meta property="og:title" content="Little Piggy">
     <meta property="og:description" content="Android">
 
     
@@ -37,7 +37,7 @@
     <link rel="alternate" type="application/rss+xml" title="Little Piggy" href="/atom.xml">
     
 
-    <link rel="canonical" href="http://yoursite.com/2017/02/16/hello-world/"/>
+    <link rel="canonical" href="http://yoursite.com/2017/03/01/03ArrayList源码小细节/"/>
 
     
       
@@ -143,25 +143,85 @@
 
   <header class="post-header">
     <div class="post-meta">
-      <time datetime="2017-02-16T10:58:15.020Z" class="post-list__meta--date date">2017-02-16</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <time datetime="2017-03-01T02:06:27.355Z" class="post-list__meta--date date">2017-02-28</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
       <span class="page-pv">
       &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
       </span> 
    
     </div>
-    <h1 class="post-title">Hello World</h1>
+    <h1 class="post-title"></h1>
   </header>
 
   <section class="post">
-    <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+    <p>ArrayList源码中有一个构造函数代码如下：</p>
+<pre><code>/**
+ * Constructs a list containing the elements of the specified
+ * collection, in the order they are returned by the collection&apos;s
+ * iterator.
+ *
+ * @param c the collection whose elements are to be placed into this list
+ * @throws NullPointerException if the specified collection is null
+ */
+public ArrayList(Collection&lt;? extends E&gt; c) {
+    elementData = c.toArray();
+    size = elementData.length;
+    // c.toArray might (incorrectly) not return Object[] (see 6260652)
+    if (elementData.getClass() != Object[].class)
+        elementData = Arrays.copyOf(elementData, size, Object[].class);
+}
+</code></pre><p>有一行注释是：</p>
+<pre><code>// c.toArray might (incorrectly) not return Object[] (see 6260652)
+</code></pre><p>意思就是说 c.toArray()方法返回的有可能不是Object[]数组。</p>
+<p>先看下面测试代码：</p>
+<pre><code>public static void test1()  
+{  
+    SubClass[] subArray = {new SubClass(), new SubClass()};  
+    System.out.println(subArray.getClass());  
+
+    // class [Lcollection.SubClass;  
+    BaseClass[] baseArray = subArray;  
+    System.out.println(baseArray.getClass());  
+
+    // java.lang.ArrayStoreException  
+    baseArray[0] = new BaseClass();  
+}  
+
+public static void test2()  
+{  
+    List&lt;String&gt; list = Arrays.asList(&quot;abc&quot;);  
+
+    // class java.util.Arrays$ArrayList  
+    System.out.println(list.getClass());  
+
+    // class [Ljava.lang.String;  
+    Object[] objArray = list.toArray();  
+    System.out.println(objArray.getClass());  
+
+    objArray[0] = new Object(); // cause ArrayStoreException  
+}  
+
+public static void test3()  
+{  
+    List&lt;String&gt; dataList = new ArrayList&lt;String&gt;();  
+    dataList.add(&quot;one&quot;);  
+    dataList.add(&quot;two&quot;);  
+
+    Object[] listToArray = dataList.toArray();  
+
+    // class [Ljava.lang.Object;返回的是Object数组  
+    System.out.println(listToArray.getClass());  
+    listToArray[0] = &quot;&quot;;  
+    listToArray[0] = 123;  
+    listToArray[0] = new Object();  
+
+}
+</code></pre><p>1、关于test1</p>
+<p>SubClass 继承自BaseClass，由于SubClass数组中每一个元素都是SubClass对象，所以BaseClass[] baseArray = subArray;这种强制类型转换不会报错。这其实就是java对象的向上转型，子类数组转换成父类数组是允许的。但是由于数组中元素类型都是SubClass类型的，所以 baseArray[0] = new BaseClass();会报错java.lang.ArrayStoreException。这也就是说假如我们有1个Object[]数组，并不代表着我们可以将Object对象存进去，这取决于数组中元素实际的类型。</p>
+<p>2、关于test2</p>
+<p>List<string> list = Arrays.asList(“abc”);需要注意，可以知道返回的实际类型是java.util.Arrays$ArrayList，而不是ArrayList。我们调用Object[] objArray = list.toArray();返回是String[]数组，所以我们不能将Object对象，放到objArray数组中。</string></p>
+<p>3、关于test3</p>
+<p>ArrayList对象的toArray()返回就是Object[]数组，所以我们可以将任意对象存放到返回的Object[]数组中。</p>
+<p>通过test2和test3可以看出，如果我们有1个List<string> stringList对象，当我么调用Object[] objectArray = stringList.toArray();的时候，objectArray 并不一定能够放置Object对象。这就是源码中的注释：c.toArray might (incorrectly) not return Object[] (see 6260652)。为了考虑这种情况，所以源码中进行了if判断，来防止错误的数组对象导致异常。Arrays.copyOf(elementData, size, Object[].class);这个方法就是用来创建1个Object[]数组，这样数组中就可以存放任意对象了。</string></p>
 
   </section>
 
@@ -172,17 +232,37 @@
                
             <div class="read-more-item">
                 <span class="read-more-item-dim">最近的文章</span>
-                <h2 class="post-list__post-title post-title"><a href="/2017/02/17/01requestWindowFeature(Window.FEATURE_NO_TITLE)无效/" title="requestWindowFeature(Window.FEATURE_NO_TITLE)无效">requestWindowFeature(Window.FEATURE_NO_TITLE)无效</a></h2>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/01/04Java集合01-总体框架/" title=""></a></h2>
                 <p class="excerpt">
                 
-                当你的activity继承的是Activity时，requestWindowFeature(Window.FEATURE_NO_TITLE)是可以隐藏标题栏的；但是，当你的activity继承的是AppCompatActivity时，requestWindowFeature(Window.FEATU
+                
+Java集合主要包括4部分：List、Set、Map和工具类(Iterator、Arrays、Collections)
+看上面的框架图，先抓住它的主干，即Collection和Map。
+1、Collection是一个接口，是高度抽象出来的集合，它包含了集合的基本操作和属性。
+Collection包
                 &hellip;
                 </p>
-                <div class="post-list__meta"><time datetime="2017-02-17T01:52:50.963Z" class="post-list__meta--date date">2017-02-16</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/02/17/01requestWindowFeature(Window.FEATURE_NO_TITLE)无效/">继续阅读</a></div>
+                <div class="post-list__meta"><time datetime="2017-03-01T07:10:07.475Z" class="post-list__meta--date date">2017-03-01</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/01/04Java集合01-总体框架/">继续阅读</a></div>
                            
             </div>
         
         
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/02/23/02menu/" title="Android中Menu的种类和使用">Android中Menu的种类和使用</a></h2>
+                <p class="excerpt">
+                
+                Android中Menu分三种：
+
+高版本系统中ActionBar右边的菜单或者按菜单键(如果有的话)弹出的菜单，也是最常见的菜单-Options Menu
+长按个别View弹出的Context Menu-Context Menu
+屏幕上方弹出的Contextual Action Bar的Menu-
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-02-23T03:30:04.073Z" class="post-list__meta--date date">2017-02-22</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/02/23/02menu/">继续阅读</a></div>
+                       
+            </div>
         
      
    
