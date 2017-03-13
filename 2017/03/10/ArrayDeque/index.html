@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Little Piggy</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="Android">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Little Piggy">
+    <meta name="twitter:description" content="Android">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Little Piggy">
+    <meta property="og:description" content="Android">
+
+    
+    <meta name="author" content="Jerry">
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+    <link rel="alternate" type="application/rss+xml" title="Little Piggy" href="/atom.xml">
+    
+
+    <link rel="canonical" href="http://yoursite.com/2017/03/10/ArrayDeque/"/>
+
+    
+      
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Little Piggy 的主页"><img src="/images/avatar.jpg" width="80" alt="Little Piggy logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Little Piggy">Little Piggy</a></h1>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">Android</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+              <li class="navigation__item"><a href="/favourite">黄金屋</a></li>
+            
+              <li class="navigation__item"><a href="/favourite/time.html">时光机</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/monniya" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  <li class="navigation__item">
+    <a href="https://twitter.com/onlymonniya" title="上Twitter找我" target="_blank">
+      <i class='social fa fa-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+
+  
+
+  <li class="navigation__item">
+    <a href="/atom.xml" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2017-03-10T00:53:48.721Z" class="post-list__meta--date date">2017-03-09</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title"></h1>
+  </header>
+
+  <section class="post">
+    <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>Java里有一个叫做Stack的类，却没有叫做Queue的类(它只是一个接口)。当使用栈时，Java已不推荐使用Stack，而是推荐使用更高效的ArrayDeque；既然Queue只是一个接口，当需要使用队列时也就首选ArrayDeque(次选是LinkedList)</p>
+<h2 id="Deque与ArrayDeque"><a href="#Deque与ArrayDeque" class="headerlink" title="Deque与ArrayDeque"></a>Deque与ArrayDeque</h2><p>Queue也是Java集合框架中定义的一种接口，直接继承自Collection接口。除了基本Collection接口规定的操作之外，Queue接口还定义了一组针对队列的特殊操作。通常来说，Queue是按照先进先出(FIFO)的方式来管理其中的元素的，但是优先队列是一个例外。</p>
+<p>Deque的含义是“Double ended queue”，即双端队列。</p>
+<p>Deque接口继承自Queue接口，但Deque支持同时从两端添加或移除元素，因此又被成为双端队列。鉴于此，Deque接口的实现可以被当做FIFO队列使用，也可以当做LIFO队列(栈)来使用。官方也推荐使用Deque的实现来替代Stack。</p>
+<p>ArrayDeque是Deque接口的一种具体实现，是依赖于可变数组来实现的。ArrayDeque没有容量限制，可根据需求自动进行扩容。ArrayDeque不支持值为null的元素。</p>
+<h3 id="方法概览"><a href="#方法概览" class="headerlink" title="方法概览"></a>方法概览</h3><p>先看Queue的方法：</p>
+<pre><code>public interface Queue&lt;E&gt; extends Collection&lt;E&gt; {
+    //向队列中插入一个元素，并返回true
+    //如果队列已满，抛出IllegalStateException异常
+    boolean add(E e);
+
+    //向队列中插入一个元素，并返回true
+    //如果队列已满，返回false
+    boolean offer(E e);
+
+    //取出队列头部的元素，并从队列中移除
+    //队列为空，抛出NoSuchElementException异常
+    E remove();
+
+    //取出队列头部的元素，并从队列中移除
+    //队列为空，返回null
+    E poll();
+
+    //取出队列头部的元素，但并不移除
+    //如果队列为空，抛出NoSuchElementException异常
+    E element();
+
+    //取出队列头部的元素，但并不移除
+    //队列为空，返回null
+    E peek();
+}
+</code></pre><p>Deque提供了双端的插入与移除操作，如下表：</p>
+<p>|– |– |– |– |– |<br>|    |    |First Element (Head) | | Last Element (Tail)|<br>|    |    Throws exception|Special value|Throws exception|Special value|<br>|Insert|addFirst(e)|offerFirst(e)|addLast(e)|offerLast(e)|<br>|Remove|removeFirst()|pollFirst()|removeLast()|pollLast()|<br>|Examine|getFirst()|peekFirst()|getLast()|peekLast()|</p>
+<p>Deque和Queue方法的对应关系如下：</p>
+<p>|–|–|<br>|Queue Method|Equivalent Deque Method|<br>|add(e)|addLast(e)|<br>|offer(e)|offerLast(e)|<br>|remvoe()|removeFirst()<br>|poll()|pollFirst()<br>|element()|getFirst()<br>|peek()|peekFirst()</p>
+<p>Deque和Stack(Stack是一个继承自Vector的类)方法的对应关系如下：</p>
+<p>|–|–|<br>|Stack Method|Equivalent Deque Method<br>|push(e)|addFirst()<br>|pop()|removeFirst()<br>|peek()|peekFirst()</p>
+<p>ArrayDeque实现了Deque接口中的所有方法。因为ArrayDeque会根据需求自动扩充容量，因而在插入元素的时候不会抛出IllegalStateException异常。</p>
+<h3 id="ArrayDeque底层结构"><a href="#ArrayDeque底层结构" class="headerlink" title="ArrayDeque底层结构"></a>ArrayDeque底层结构</h3><pre><code>//用数组存储元素
+transient Object[] elements; // non-private to simplify nested class access
+//头部元素的索引
+transient int head;
+//尾部下一个将要被加入的元素的索引
+transient int tail;
+//最小容量，必须为2的幂次方
+private static final int MIN_INITIAL_CAPACITY = 8;
+</code></pre><p>在ArrayDeque底部是使用数组存储元素，同时还使用了两个索引来表征当前数组的状态，分别是head和tail。head是头部元素的索引，但注意tail不是尾部元素的索引，而是尾部元素的下一位，即下一个将要被加入的元素的索引。</p>
+<p><img src="http://i.imgur.com/oWuWYHF.png" alt=""></p>
+<p>上图中我们看到，<code>head</code>指向首端第一个有效元素，<code>tail</code>指向尾端第一个可以插入元素的空位。因为是循环数组，所以<code>head</code>不一定总是0，<code>tail</code>也不一定总是比<code>head</code>大。</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>ArrayDeque提供了三个构造方法，分别是默认容量，指定容量和依据给定的集合中的元素进行创建。默认容量为16.</p>
+<pre><code>public ArrayDeque() {
+    elements = new Object[16];
+}
+
+public ArrayDeque(int numElements) {
+    allocateElements(numElements);
+}
+
+public ArrayDeque(Collection&lt;? extends E&gt; c) {
+    allocateElements(c.size());
+    addAll(c);
+}
+</code></pre><p>ArrayDeque对数组的大小(即队列的容量)有特殊的要求，必须是2^n。通过<code>allocateElements</code>方法计算初始容量：</p>
+<pre><code>/**
+ * Allocates empty array to hold the given number of elements.
+ *
+ * @param numElements  the number of elements to hold
+ */
+private void allocateElements(int numElements) {
+    int initialCapacity = MIN_INITIAL_CAPACITY;
+    // Find the best power of two to hold elements.
+    // Tests &quot;&lt;=&quot; because arrays aren&apos;t kept full.
+    if (numElements &gt;= initialCapacity) {
+        initialCapacity = numElements;
+        initialCapacity |= (initialCapacity &gt;&gt;&gt;  1);
+        initialCapacity |= (initialCapacity &gt;&gt;&gt;  2);
+        initialCapacity |= (initialCapacity &gt;&gt;&gt;  4);
+        initialCapacity |= (initialCapacity &gt;&gt;&gt;  8);
+        initialCapacity |= (initialCapacity &gt;&gt;&gt; 16);
+        initialCapacity++;
+
+        if (initialCapacity &lt; 0)    // Too many elements, must back off
+            initialCapacity &gt;&gt;&gt;= 1; // Good luck allocating 2^30 elements
+    }
+    elements = new Object[initialCapacity];
+}
+</code></pre><p><code>&gt;&gt;&gt;</code>是无符号右移操作，<code>|</code>是位或操作，经过五次右移和位或操作可以保证得到的大小为2^k-1的数。看一下这个例子：</p>
+<pre><code>0 0 0 0 1 ? ? ? ? ?     //n
+0 0 0 0 1 1 ? ? ? ?     //n |= n &gt;&gt;&gt; 1;
+0 0 0 0 1 1 1 1 ? ?     //n |= n &gt;&gt;&gt; 2;
+0 0 0 0 1 1 1 1 1 1     //n |= n &gt;&gt;&gt; 4;
+</code></pre><p>解释下这个操作：</p>
+<p>将一个数值(只考虑正数)转换成二进制之后，最高位肯定是1，最高位不代表int值的最高位啊(int最高位是32位)，上面的例子中就是第6位。</p>
+<p>第一步：无符号右移一位，并取位或之后的值，最高两位肯定都是1了</p>
+<p>第二步：无符号右移两位，并取位或之后的值，最高四位肯定都是1了</p>
+<p>第三步：无符号右移四位，并取位或之后的值，最高八位肯定都是1了</p>
+<p>第四步：无符号右移八位，并取位或之后的值，最高16位肯定都是1了</p>
+<p>第五步：无符号右移16位，并取位或之后的值，最高32位肯定都是1了(int的最大整数是2^31-1，也就是30个1,30个1进行完这五步之后还是30个1，然后执行后面的initialCapacity++,就变成2^31了，这个数就是最高位第32位是1，剩下的31个0，Java中最高位表示符号位，1表示负数；所以这个数已经是负数了)，就会走下面的if语句，无符号右移一位，就变成2^30了。</p>
+<p>在进行5次位移操作和位或操作后就可以得到2^k-1，最后加1即可。这个实现还是很巧妙的。</p>
+<h3 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h3><p>向末尾添加元素：</p>
+<p><code>addLast(E e)</code>的作用是在Deque的尾端插入元素，也就是在<code>tail</code>的位置插入元素，由于<code>tail</code>总是指向下一个可以插入的空位，因此只需要<code>elements[tail] = e;</code>即可。插入完成后再检查空间，如果空间已经用光，则调用<code>doubleCapacity()进行扩容</code>。</p>
+<p><img src="http://i.imgur.com/HE8BllC.png" alt=""></p>
+<pre><code>public void addLast(E e) {
+    if (e == null)
+        throw new NullPointerException();
+    //tail 中保存的是即将加入末尾的元素的索引
+    elements[tail] = e;
+    //tail 向后移动一位
+    //把数组当作环形的，越界后到0索引
+    if ( (tail = (tail + 1) &amp; (elements.length - 1)) == head)
+        //tail 和 head相遇，空间用尽，需要扩容
+        doubleCapacity();
+}
+</code></pre><p>这段代码中，<code>(tail = (tail + 1) &amp; (elements.length - 1)) == head</code>这句有点难以理解。这行代码相当于<code>tail = (tail + 1) % (elements.length - 1)</code>,两行代码相同的前提就在于这个elements.length必须是2^n，待会解释这个。在ArrayDeque中数组是当做<strong>环形</strong>来使用的：</p>
+<p><img src="http://i.imgur.com/GTuooPC.jpg" alt=""></p>
+<p>所以，当往数组中添加一个元素之后，tail的指向就应该往后挪一位，如果tail本来已经在数组的最后一位了呢？如果已经是最后一位了，因为该数组我们要当做环形数组来使用(数据结构上不是环形，也没办法弄个环形数组，只能是逻辑上的环形)，所以tail+1就应该等于0；整体的这个操作就是<code>tail = (tail + 1) % (elements.length - 1)</code>，tail的值改变之后还要和head比较，如果<code>tail == head</code>，说明满了，就要调用<code>doubleCapacity</code>去扩容了。</p>
+<p>接下来解释下为什么<code>(tail = (tail + 1) &amp; (elements.length - 1)) == head</code>等同于<code>tail = (tail + 1) % (elements.length - 1)</code></p>
+<p>因为elements.length为2^n，做-1操作之后，n-1位全是1;在执行<code>tail+1</code>操作之前tail的值有以下两种情况：</p>
+<ul>
+<li>tail &lt; length-1:这个时候<code>(tail+1)&amp;(length-1)</code>还是等于<code>tail+1</code>，因为length-1的二进制全是1.</li>
+<li>tail == length-1:这个时候<code>tail+1</code>就等于2^n,换成二进制就是最高位是1，n-1位是0；而length-1的二进制是n-1位1，这时<code>(tail+1)&amp;(length-1)</code>就等于0了，从而实现了循环数组的逻辑。</li>
+</ul>
+<p>并且这个位运算的效率要远远高于%运算。</p>
+<p>向头部添加元素：</p>
+<p>addFirst方法：</p>
+<p>addFirst(E e)的作用是在Deque的首端插入元素，也就是在<code>head</code>的前面插入元素，在空间足够且下标没有越界的情况下，只需要将<code>element[--head] = e</code>即可。</p>
+<p><img src="http://i.imgur.com/r1Z2pie.png" alt=""></p>
+<p>实际需要考虑：1、空间是否够用；2、下标是否越界。上图中，如果<code>head</code>为<code>0</code>之后接着调用<code>addFirst</code>,虽然空余空间还够用，但<code>head</code>为<code>-1</code>，下标越界了。下面代码很好的解决了这两个问题。</p>
+<pre><code>//addFirst(E e)
+public void addFirst(E e) {
+    if (e == null)//不允许放入null
+        throw new NullPointerException();
+    elements[head = (head - 1) &amp; (elements.length - 1)] = e;//2.下标是否越界
+    if (head == tail)//1.空间是否够用
+        doubleCapacity();//扩容
+}
+</code></pre><p>上述代码我们看到，<strong>空间问题是在插入之后解决的</strong>，因为<code>tail</code>总是指向下一个可插入的空位，也就意味着<code>elements</code>数组至少有一个空位，所以插入元素的时候不用考虑空间问题。</p>
+<p>下标越界的处理解决起来非常简单<code>head = (head - 1) &amp; (elements.length - 1)</code>就可以了，<strong>这段代码相当于取余，同时解决了<code>head</code>为负值的情况</strong>。head如果不等于0，head-1就不等于-1，和length-1取&amp;之后还是head-1；如果head,等于0，head-1就等于-1，和length-1取&amp;之后就是length-1.因为负一(-1)的二进制如下：</p>
+<pre><code>11111111111111111111111111111111
+</code></pre><p>其他诸如add、offer、offerFirst、offerLast、push等方法都是基于上面这两个方法实现的。</p>
+<h3 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h3><p>在每次添加元素后，如果head==tail，说明数组空间已满，需要进行扩容操作。ArrayDeque每次扩容都会在原有的容器上翻倍，这也是对容器容量必须是2^n的保证。</p>
+<p><img src="http://i.imgur.com/sYTxsXO.png" alt=""></p>
+<pre><code>private void doubleCapacity() {
+    assert head == tail; //扩容时头部索引和尾部索引肯定相等
+    int p = head;
+    int n = elements.length;
+    //头部索引到数组末端(length-1处)共有多少元素
+    int r = n - p; // number of elements to the right of p
+    //容量翻倍
+    int newCapacity = n &lt;&lt; 1;
+    //容量过大，溢出了
+    if (newCapacity &lt; 0)
+        throw new IllegalStateException(&quot;Sorry, deque too big&quot;);
+    //分配新空间
+    Object[] a = new Object[newCapacity];
+    //复制头部索引到数组末端的元素到新数组的头部
+    System.arraycopy(elements, p, a, 0, r);
+    //复制其余元素
+    System.arraycopy(elements, 0, a, r, p);
+    elements = a;
+    //重置头尾索引
+    head = 0;
+    tail = n;
+}
+</code></pre><h3 id="移除元素"><a href="#移除元素" class="headerlink" title="移除元素"></a>移除元素</h3><p>ArrayDeque支持从头尾两端移除元素，remove方法是通过poll来实现的。以为是基于数组的，在了解了环的原理后这段代码就比较容易理解了。</p>
+<pre><code>public E pollFirst() {
+    int h = head;
+    @SuppressWarnings(&quot;unchecked&quot;)
+    E result = (E) elements[h];
+    // Element is null if deque empty
+    if (result == null)
+        return null;
+    elements[h] = null;     // Must null out slot
+    head = (h + 1) &amp; (elements.length - 1); //下标越界处理
+    return result;
+}
+</code></pre><p><code>pollFirst()</code>的作用是删除并返回Deque首端元素，也就是<code>head</code>位置处的元素。如果容器不为空，只需要直接返回<code>element[head]</code>即可，当然还需要处理下标的问题。由于<code>ArrayDeque</code>中不允许放入<code>null</code>，当<code>element[head] == null</code>时，意味着容器为空。</p>
+<pre><code>public E pollLast() {
+    int t = (tail - 1) &amp; (elements.length - 1);
+    @SuppressWarnings(&quot;unchecked&quot;)
+    E result = (E) elements[t];
+    if (result == null)    //null值意味着deque为空
+        return null;
+    elements[t] = null;    //let GC work
+    tail = t;
+    return result;
+}
+</code></pre><p><code>pollLast()</code>的作用是删除并返回Deque尾端元素，也即是<code>tail</code>位置前面的那个元素。</p>
+<h3 id="获取队列和队尾的元素"><a href="#获取队列和队尾的元素" class="headerlink" title="获取队列和队尾的元素"></a>获取队列和队尾的元素</h3><pre><code>@SuppressWarnings(&quot;unchecked&quot;)
+public E peekFirst() {
+    // elements[head] is null if deque empty
+    return (E) elements[head];
+}
+
+@SuppressWarnings(&quot;unchecked&quot;)
+public E peekLast() {
+    return (E) elements[(tail - 1) &amp; (elements.length - 1)];
+}
+</code></pre><h3 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h3><p>ArrayDeque在迭代时检查并发修改并没有使用类似于ArrayList等容器中使用的modCount，而是通过尾部索引来确定的。具体参考next方法中的注释。但是这样不一定能保证检测到所有的并发修改情况，先移除尾部元素，又添加了一个尾部元素，这种情况下迭代器是没法检测出来的。</p>
+<pre><code>private class DeqIterator implements Iterator&lt;E&gt; {
+    /**
+     * Index of element to be returned by subsequent call to next.
+     */
+    private int cursor = head;
+
+    /**
+     * Tail recorded at construction (also in remove), to stop
+     * iterator and also to check for comodification.
+     */
+    private int fence = tail;
+
+    /**
+     * Index of element returned by most recent call to next.
+     * Reset to -1 if element is deleted by a call to remove.
+     */
+    private int lastRet = -1;
+
+    public boolean hasNext() {
+        return cursor != fence;
+    }
+
+    public E next() {
+        if (cursor == fence)
+            throw new NoSuchElementException();
+        @SuppressWarnings(&quot;unchecked&quot;)
+        E result = (E) elements[cursor];
+        // This check doesn&apos;t catch all possible comodifications,
+        // but does catch the ones that corrupt traversal
+        // 如果移除了尾部元素，会导致tail != fence
+        // 如果移除了头部元素，会导致 result == null
+        if (tail != fence || result == null)
+            throw new ConcurrentModificationException();
+        lastRet = cursor;
+        cursor = (cursor + 1) &amp; (elements.length - 1);
+        return result;
+    }
+
+    public void remove() {
+        if (lastRet &lt; 0)
+            throw new IllegalStateException();
+        if (delete(lastRet)) { // if left-shifted, undo increment in next()
+            cursor = (cursor - 1) &amp; (elements.length - 1);
+            fence = tail;
+        }
+        lastRet = -1;
+    }
+
+    public void forEachRemaining(Consumer&lt;? super E&gt; action) {
+        Objects.requireNonNull(action);
+        Object[] a = elements;
+        int m = a.length - 1, f = fence, i = cursor;
+        cursor = f;
+        while (i != f) {
+            @SuppressWarnings(&quot;unchecked&quot;) E e = (E)a[i];
+            i = (i + 1) &amp; m;
+            if (e == null)
+                throw new ConcurrentModificationException();
+            action.accept(e);
+        }
+    }
+}
+</code></pre><h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>ArrayDeque是Deque接口的一种具体实现，是依赖于可变数组来实现的。ArrayDeque没有容量限制，可根据需求自动进行扩容。ArrayDeque可以作为栈来使用，效率要高于Stack；ArrayDeque也可以作为队列来使用，效率相较于基于双向链表的LinkedList也要更好一些。注意，ArrayDeque不支持null元素。</p>
+
+  </section>
+
+</article>
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/13/算法--求二进制数中1的个数/" title=""></a></h2>
+                <p class="excerpt">
+                
+                算法，求二进制数中1的个数
+
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-13T07:29:49.102Z" class="post-list__meta--date date">2017-03-13</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/13/算法--求二进制数中1的个数/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/09/Java中的深拷贝和浅拷贝/" title=""></a></h2>
+                <p class="excerpt">
+                
+                浅复制与深复制概念浅复制(浅克隆)：被复制对象的所有变量都含有与原来的对象相同的值，而所有的对其他对象的引用仍指向原来的对象。换言之，浅复制仅仅复制所考虑的对象，而不复制它所引用的对象。
+深复制(深克隆)：被复制对象的所有变量都含有与原来的对象相同的值，除去那些引用其他对象的变量。那些引用其他对象的
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-09T08:13:25.876Z" class="post-list__meta--date date">2017-03-09</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/09/Java中的深拷贝和浅拷贝/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+            
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    <span class="footer__copyright">
+        基于 <a href="http://hexo.io">Hexo</a> 搭建，感谢 <a href="https://pages.github.com/">GitHub Pages</a> 提供免费的托管服务
+    </span>
+    <span class="footer__copyright">
+        &copy; 2017 - 本站由 <a href="/">@Monniya</a> 创建,
+        使用 <a href="https://github.com/monniya/hexo-theme-new-vno ">hexo-theme-new-vno</a> 主题,
+        修改自 <a href="https://github.com/lenbo-ma/hexo-theme-vno" target="_blank">Vno</a>, 原创出自<a href="http://github.com/onevcat/vno" target="_blank">onevcat</a>
+    </span>
+</footer>
+        </div>
+    </div>
+
+    
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+    
+    </script>
+    
+</body>
+</html>

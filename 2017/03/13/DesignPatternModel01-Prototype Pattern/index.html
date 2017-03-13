@@ -37,7 +37,7 @@
     <link rel="alternate" type="application/rss+xml" title="Little Piggy" href="/atom.xml">
     
 
-    <link rel="canonical" href="http://yoursite.com/2017/03/01/04Java集合01-总体框架/"/>
+    <link rel="canonical" href="http://yoursite.com/2017/03/13/DesignPatternModel01-Prototype Pattern/"/>
 
     
       
@@ -143,7 +143,7 @@
 
   <header class="post-header">
     <div class="post-meta">
-      <time datetime="2017-03-01T07:10:07.475Z" class="post-list__meta--date date">2017-03-01</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <time datetime="2017-03-13T09:38:38.919Z" class="post-list__meta--date date">2017-03-13</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
       <span class="page-pv">
       &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
       </span> 
@@ -153,17 +153,8 @@
   </header>
 
   <section class="post">
-    <p><img src="http://i.imgur.com/ei5NPtT.jpg" alt=""></p>
-<p>Java集合主要包括4部分：List、Set、Map和工具类(Iterator、Arrays、Collections)</p>
-<p>看上面的框架图，先抓住它的主干，即Collection和Map。</p>
-<p>1、Collection是一个接口，是高度抽象出来的集合，它包含了集合的基本操作和属性。</p>
-<p>Collection包含了List和Set两大分支。</p>
-<ul>
-<li>01 List是一个有序的队列，每一个元素都有它的索引。List的实现类有LinkedList，ArrayList，Vector，Stack</li>
-<li>Set是一个不允许有重复元素的集合。Set的实现类有HashSet和TreeSet。HashSet依赖于HashMap，它实际上是通过HashMap实现的；TreeSet依赖于TreeMap，它实际上是通过TreeMap实现的。</li>
-</ul>
-<p>2、Map是一个映射接口，即key-value键值对。Map包含HashMap，TreeMap等</p>
-<p><img src="http://i.imgur.com/AUWiIqG.png" alt=""></p>
+    <h2 id="原型模式-Prototype-Pattern"><a href="#原型模式-Prototype-Pattern" class="headerlink" title="原型模式-Prototype Pattern"></a>原型模式-Prototype Pattern</h2><html><font color="red"><strong>原型模式属于对象的创建模式。使用原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。</strong></font></html>
+
 
   </section>
 
@@ -171,36 +162,19 @@
 <section class="read-more">
            
     
-               
-            <div class="read-more-item">
-                <span class="read-more-item-dim">最近的文章</span>
-                <h2 class="post-list__post-title post-title"><a href="/2017/03/01/05Java集合02-Collection架构/" title=""></a></h2>
-                <p class="excerpt">
-                
-                
-Collection是一个接口，它主要的两个分支是：List和Set
-List和Set都是接口，他们继承于Collection。List是有序的队列，List中可以有重复的元素，List取出顺序和存取顺序一样；而Set中没有重复元素，并且取出顺序和存取顺序不同，并且取出顺序有可能发生改变。
-为了方
-                &hellip;
-                </p>
-                <div class="post-list__meta"><time datetime="2017-03-01T08:22:35.859Z" class="post-list__meta--date date">2017-03-01</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/01/05Java集合02-Collection架构/">继续阅读</a></div>
-                           
-            </div>
         
         
                
             <div class="read-more-item">
                 <span class="read-more-item-dim">更早的文章</span>
-                <h2 class="post-list__post-title post-title"><a href="/2017/03/01/03ArrayList源码小细节/" title=""></a></h2>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/13/算法--求二进制数中1的个数/" title=""></a></h2>
                 <p class="excerpt">
                 
-                ArrayList源码中有一个构造函数代码如下：
-/**
- * Constructs a list containing the elements of the specified
- * collection, in the order they are returned by the collec
+                算法，求二进制数中1的个数
+
                 &hellip;
                 </p>
-                <div class="post-list__meta"><time datetime="2017-03-01T02:06:27.355Z" class="post-list__meta--date date">2017-02-28</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/01/03ArrayList源码小细节/">继续阅读</a></div>
+                <div class="post-list__meta"><time datetime="2017-03-13T07:29:49.102Z" class="post-list__meta--date date">2017-03-13</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/13/算法--求二进制数中1的个数/">继续阅读</a></div>
                        
             </div>
         

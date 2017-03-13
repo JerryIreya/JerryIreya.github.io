@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Little Piggy</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="Android">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Little Piggy">
+    <meta name="twitter:description" content="Android">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Little Piggy">
+    <meta property="og:description" content="Android">
+
+    
+    <meta name="author" content="Jerry">
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+    <link rel="alternate" type="application/rss+xml" title="Little Piggy" href="/atom.xml">
+    
+
+    <link rel="canonical" href="http://yoursite.com/2017/03/05/07Java集合04-LinkedList详解/"/>
+
+    
+      
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Little Piggy 的主页"><img src="/images/avatar.jpg" width="80" alt="Little Piggy logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Little Piggy">Little Piggy</a></h1>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">Android</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+              <li class="navigation__item"><a href="/favourite">黄金屋</a></li>
+            
+              <li class="navigation__item"><a href="/favourite/time.html">时光机</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/monniya" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  <li class="navigation__item">
+    <a href="https://twitter.com/onlymonniya" title="上Twitter找我" target="_blank">
+      <i class='social fa fa-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+
+  
+
+  <li class="navigation__item">
+    <a href="/atom.xml" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2017-03-05T08:26:17.330Z" class="post-list__meta--date date">2017-03-05</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title"></h1>
+  </header>
+
+  <section class="post">
+    <h3 id="LinkedList简介"><a href="#LinkedList简介" class="headerlink" title="LinkedList简介"></a>LinkedList简介</h3><pre><code>public class LinkedList&lt;E&gt; extends AbstractSequentialList&lt;E&gt;
+implements List&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable
+</code></pre><p>LinkedList是一个继承于AbstractSequentialList的双向链表，AbstractSequentialList又继承了AbstractList。它可以被当做<strong>堆栈</strong>、<strong>队列</strong>或<strong>双端队列</strong>进行操作。</p>
+<p>LinkedList实现了<strong>Deque接</strong>口，即能将LinkedList当做双端队列使用。</p>
+<p>LinkedList实现了Cloneable接口，即覆盖了函数clone()，能克隆。</p>
+<p>LinkedList实现了java.io.Serializable接口，这以为这LinkedList支持序列化，能通过序列化去传输。</p>
+<p>LinkedList和ArrayList是非同步的，线程不安全，但是效率相对线程同步的高一点。</p>
+<h4 id="LinkedList构造函数"><a href="#LinkedList构造函数" class="headerlink" title="LinkedList构造函数"></a>LinkedList构造函数</h4><pre><code>/**
+ * Constructs an empty list.
+ */
+public LinkedList() {
+}
+
+/**
+ * Constructs a list containing the elements of the specified
+ * collection, in the order they are returned by the collection&apos;s
+ * iterator.
+ *
+ * @param  c the collection whose elements are to be placed into this list
+ * @throws NullPointerException if the specified collection is null
+ */
+public LinkedList(Collection&lt;? extends E&gt; c) {
+    this();
+    addAll(c);
+}
+</code></pre><h4 id="LinkedList的API"><a href="#LinkedList的API" class="headerlink" title="LinkedList的API"></a>LinkedList的API</h4><pre><code>boolean       add(E object)
+void          add(int location, E object)
+boolean       addAll(Collection&lt;? extends E&gt; collection)
+boolean       addAll(int location, Collection&lt;? extends E&gt; collection)
+void          addFirst(E object)
+void          addLast(E object)
+void          clear()
+Object        clone()
+boolean       contains(Object object)
+Iterator&lt;E&gt;   descendingIterator()
+E             element()
+E             get(int location)
+E             getFirst()
+E             getLast()
+int           indexOf(Object object)
+int           lastIndexOf(Object object)
+ListIterator&lt;E&gt;     listIterator(int location)
+boolean       offer(E o)
+boolean       offerFirst(E e)
+boolean       offerLast(E e)
+E             peek()
+E             peekFirst()
+E             peekLast()
+E             poll()
+E             pollFirst()
+E             pollLast()
+E             pop()
+void          push(E e)
+E             remove()
+E             remove(int location)
+boolean       remove(Object object)
+E             removeFirst()
+boolean       removeFirstOccurrence(Object o)
+E             removeLast()
+boolean       removeLastOccurrence(Object o)
+E             set(int location, E object)
+int           size()
+&lt;T&gt; T[]       toArray(T[] contents)
+Object[]     toArray()
+</code></pre><h4 id="AbstractSequentialList简介"><a href="#AbstractSequentialList简介" class="headerlink" title="AbstractSequentialList简介"></a>AbstractSequentialList简介</h4><p>在介绍LinkedList的源码之前，先介绍一下AbstractSequentialList。</p>
+<p>AbstractSequentialList实现了get(int index)、set(int index, E element)、add(int index, E element)和remove(int index)这些函数。<strong>这些接口都是随机访问List的</strong>，LinkedList是双向链表；既然它继承于AbstractSequentialList，就相当于已经实现了get(int index)这些接口。</p>
+<h3 id="LinkedList数据结构"><a href="#LinkedList数据结构" class="headerlink" title="LinkedList数据结构"></a>LinkedList数据结构</h3><pre><code>java.lang.Object
+   ↳     java.util.AbstractCollection&lt;E&gt;
+         ↳     java.util.AbstractList&lt;E&gt;
+               ↳     java.util.AbstractSequentialList&lt;E&gt;
+                     ↳     java.util.LinkedList&lt;E&gt;
+
+public class LinkedList&lt;E&gt; extends AbstractSequentialList&lt;E&gt;
+implements List&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable {}
+</code></pre><h4 id="LinkedList与Collection关系如下图："><a href="#LinkedList与Collection关系如下图：" class="headerlink" title="LinkedList与Collection关系如下图："></a>LinkedList与Collection关系如下图：</h4><p><img src="http://i.imgur.com/XqEgwl4.jpg" alt=""></p>
+<p>上图是旧版本的LinkedList，新版本的是将Entry换成了Node，Node是LinkedList的内部类：</p>
+<pre><code>private static class Node&lt;E&gt; {
+    E item;
+    Node&lt;E&gt; next;
+    Node&lt;E&gt; prev;
+
+    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) {
+        this.item = element;
+        this.next = next;
+        this.prev = prev;
+    }
+}
+</code></pre><p>LinkedList的本质是双向链表。</p>
+<p>1、LinkedList继承于AbstractSequentialList，并实现了Deque接口。</p>
+<p>2、LinkedList包含了三个重要的成员：first、last和size</p>
+<pre><code>first是双向链表的表头，它是Node的实例。Node中包含成员变量：next、prev、item。其中next是该节点的下一个节点，prev是该节点的上一个节点，item是该节点所包含的值。
+
+last是双向链表的表尾，即最后一个节点。
+
+size是双向链表的长度。
+</code></pre><h3 id="LinkedList源码解析"><a href="#LinkedList源码解析" class="headerlink" title="LinkedList源码解析"></a>LinkedList源码解析</h3><p>LinkedList实际上是通过双向链表去实现的。既然是双向链表，那么它的<strong>顺序访问会非常高效，而随机访问效率比较低</strong>。</p>
+<p>既然LinkedList是通过双向链表实现的，但是它也实现了List接口{也就是说，它实现了get(int index)、remove(int index)等根据<strong>索引值来获取、删除节点的方法</strong>}。LinkedList是如何实现List的这些接口的，如何将<strong>双向链表和索引值联系起来的</strong>？</p>
+<p>实际原理非常简单，它就是通过一个<strong>计数索引值</strong>来实现的。例如，当我们调用get(int index)时，首选会比较“index”和“双向链表长度1/2”；如果前者大，则从链表头开始往后查找，知道index位置；否则，从链表末尾开始向前查找，知道index位置。</p>
+<p>这就是“双向链表和索引值联系起来”的方法。</p>
+<p>下面就是根据index获取指定Node的方法：</p>
+<pre><code>/**
+ * Returns the (non-null) Node at the specified element index.
+ */
+Node&lt;E&gt; node(int index) {
+    // assert isElementIndex(index);
+    //如果index &lt; size / 2，就从first开始，往后next (index-1)次，获取到那个位置的Node并返回
+    if (index &lt; (size &gt;&gt; 1)) {
+        Node&lt;E&gt; x = first;
+        for (int i = 0; i &lt; index; i++)
+            x = x.next;
+        return x;
+    } else {
+    //如果index &gt;= size / 2,就从last开始，往前prev (size -index-1)次，获取到那个位置的Node并返回
+        Node&lt;E&gt; x = last;
+        for (int i = size - 1; i &gt; index; i--)
+            x = x.prev;
+        return x;
+    }
+}
+</code></pre><p>最新的LinkedList中方法很多，看重点的：</p>
+<p>1、将元素e放到链表的头部。</p>
+<pre><code>/**
+     * Links e as first element.
+     */
+    private void linkFirst(E e) {
+        final Node&lt;E&gt; f = first;
+        final Node&lt;E&gt; newNode = new Node&lt;&gt;(null, e, f);
+        first = newNode;
+        //如果first开始时为null，说明还是个空链表，将last也设置成newNode，这时first=last
+        if (f == null)
+            last = newNode;
+        else
+        //如果first开始时不为null，说明这个链表本来就不是空链表，将之前的first的perv指向新的头结点，也就是newNode
+            f.prev = newNode;
+        size++;
+        modCount++;
+    }
+</code></pre><p>2、将元素e放到链表的尾部。</p>
+<pre><code>/**
+ * Links e as last element.
+ */
+void linkLast(E e) {
+    final Node&lt;E&gt; l = last;
+    final Node&lt;E&gt; newNode = new Node&lt;&gt;(l, e, null);
+    last = newNode;
+    //如果last开始时为null，说明这个链表本来是一个空链表，就将first也设置为newNode，这时first=last
+    if (l == null)
+        first = newNode;
+    else
+    //如果last开始时不为null，说明这个链表本来不是一个空链表，将之前的last的next指向现在的last，也就是newNode
+        l.next = newNode;
+    size++;
+    modCount++;
+}
+</code></pre><p>3、在一个节点之前插入一个元素：</p>
+<pre><code>/**
+ * Inserts element e before non-null Node succ.
+ * 该方法主要用来插入数据，例如，add(int index,E e)方法就会调用该方法，在index处插入一个数据e，就是在原来的index位置的元素之前插入e。
+ */
+void linkBefore(E e, Node&lt;E&gt; succ) {
+    // assert succ != null;
+    //先保存succ的前驱
+    final Node&lt;E&gt; pred = succ.prev;
+    //新插入的节点的前驱是succ原来的前驱，后继就是succ
+    final Node&lt;E&gt; newNode = new Node&lt;&gt;(pred, e, succ);
+    //修改succ的前驱，指向新节点
+    succ.prev = newNode;
+    //如果succ原来没有前驱(前驱为null)，说明新插入的节点就是头结点
+    if (pred == null)
+        first = newNode;
+    else
+    //否则，如果原来succ原来有前驱，就将原来前驱的后继设置成newNode
+        pred.next = newNode;
+    size++;
+    modCount++;
+}
+</code></pre><p>4、移除第一个节点:</p>
+<pre><code>/**
+ * Unlinks non-null first node f.
+ * 该方法是移除链表的第一个元素
+ */
+private E unlinkFirst(Node&lt;E&gt; f) {
+    // assert f == first &amp;&amp; f != null;
+    final E element = f.item;
+    final Node&lt;E&gt; next = f.next;
+    f.item = null;
+    f.next = null; // help GC
+    //将first指向f的next
+    first = next;
+    //如果f的next是空，说明链表在移除first之后变成了空链表，这时将last也置为空
+    if (next == null)
+        last = null;
+    else
+    //否则，将next的prev置为空
+        next.prev = null;
+    //长度--
+    size--;
+    modCount++;
+    return element;
+}
+</code></pre><p>5、移除最后一个节点：</p>
+<pre><code>/**
+ * Unlinks non-null last node l.
+ * 该方法是移除链表的最后一个元素。
+ */
+private E unlinkLast(Node&lt;E&gt; l) {
+    // assert l == last &amp;&amp; l != null;
+    final E element = l.item;
+    //先将最后一个节点的前驱节点记录下来。
+    final Node&lt;E&gt; prev = l.prev;
+    l.item = null;
+    l.prev = null; // help GC
+    //既然最后一个几点要移除了，就将最后一个节点的前驱节点设置为last节点。
+    last = prev;
+    //如果l的prev为空，说明链表在移除最后一个节点之后变成了空链表，这时first也为空。
+    if (prev == null)
+        first = null;
+    else
+    //否则，将prev的next置为空
+        prev.next = null;
+    //长度--
+    size--;
+    modCount++;
+    return element;
+}
+</code></pre><p>6、移除一个非空的节点：</p>
+<pre><code>/**
+ * Unlinks non-null node x.
+ */
+E unlink(Node&lt;E&gt; x) {
+    // assert x != null;
+    final E element = x.item;
+    //先记录下要删除节点x的前驱和后继节点
+    final Node&lt;E&gt; next = x.next;
+    final Node&lt;E&gt; prev = x.prev;
+
+    //如果x的前驱为null，说明x是first节点，x删除之后，first就是x的next节点
+    if (prev == null) {
+        first = next;
+    } else {
+        //否则，x不是first节点，就将x的前驱的next设置为x的next；将x的prev设置为null，方便gc回收
+        prev.next = next;
+        x.prev = null;
+    }
+
+
+    //如果x的后继为null，说明x为last节点，x删除之后，last就是x的prev节点
+    if (next == null) {
+        last = prev;
+    } else {
+        //否则，x不是last节点，就将x的next的前驱设置为x的prev；将x的next设置为null，方便gc回收
+        next.prev = prev;
+        x.next = null;
+    }
+
+    //将x的item设置为null，方便gc回收
+    x.item = null;
+    //将长度--
+    size--;
+    modCount++;
+    return element;
+}
+</code></pre><p>7、获取第一个节点：</p>
+<pre><code>/**
+ * Returns the first element in this list.
+ *
+ * @return the first element in this list
+ * @throws NoSuchElementException if this list is empty
+ */
+public E getFirst() {
+    final Node&lt;E&gt; f = first;
+    //如果first为null，说明该链表是空链表，抛出异常；否则，返回first的item
+    if (f == null)
+        throw new NoSuchElementException();
+    return f.item;
+}
+</code></pre><p>8、获取最后一个节点：</p>
+<pre><code>/**
+ * Returns the last element in this list.
+ *
+ * @return the last element in this list
+ * @throws NoSuchElementException if this list is empty
+ */
+public E getLast() {
+    final Node&lt;E&gt; l = last;
+    //如果last为null，说明该链表是空链表，抛出异常；否则，返回last的item
+    if (l == null)
+        throw new NoSuchElementException();
+    return l.item;
+}
+</code></pre><p>9、移除链表的第一个节点：</p>
+<pre><code>/**
+ * Removes and returns the first element from this list.
+ *
+ * @return the first element from this list
+ * @throws NoSuchElementException if this list is empty
+ */
+public E removeFirst() {
+    final Node&lt;E&gt; f = first;
+    //如果first为null，说明该链表是空链表，抛出异常，否则，调用unlinkFirst(Node) 方法。
+    if (f == null)
+        throw new NoSuchElementException();
+    return unlinkFirst(f);
+}
+</code></pre><p>10、移除链表的最后一个节点：</p>
+<pre><code>/**
+ * Removes and returns the last element from this list.
+ *
+ * @return the last element from this list
+ * @throws NoSuchElementException if this list is empty
+ */
+public E removeLast() {
+    final Node&lt;E&gt; l = last;
+    //如果last为null，说明该链表是空链表，抛出异常；否则，调用unlinkLast(Node)方法。
+    if (l == null)
+        throw new NoSuchElementException();
+    return unlinkLast(l);
+}
+</code></pre><p>11、在链表头部添加一个节点：</p>
+<pre><code>/**
+ * Inserts the specified element at the beginning of this list.
+ *
+ * @param e the element to add
+ */
+public void addFirst(E e) {
+    linkFirst(e);
+}
+</code></pre><p>12、在链表尾部添加一个节点：</p>
+<pre><code>/**
+ * Appends the specified element to the end of this list.
+ *
+ * &lt;p&gt;This method is equivalent to {@link #add}.
+ *
+ * @param e the element to add
+ */
+public void addLast(E e) {
+    linkLast(e);
+}
+</code></pre><p>13、判断链表是否包含某个元素：</p>
+<pre><code>/**
+ * Returns true if this list contains the specified element.
+ * More formally, returns true if and only if this list contains
+ * at least one element e such that
+ * &lt;tt&gt;(o==null&amp;nbsp;?&amp;nbsp;e==null&amp;nbsp;:&amp;nbsp;o.equals(e))&lt;/tt&gt;.
+ *
+ * @param o element whose presence in this list is to be tested
+ * @return {@code true} if this list contains the specified element
+ */
+public boolean contains(Object o) {
+    return indexOf(o) != -1;
+}
+</code></pre><p>14、返回链表的长度；</p>
+<pre><code>/**
+ * Returns the number of elements in this list.
+ *
+ * @return the number of elements in this list
+ */
+public int size() {
+    return size;
+}
+</code></pre><p>15、在链表尾部添加一个节点：</p>
+<pre><code>/**
+ * Appends the specified element to the end of this list.
+ *
+ * &lt;p&gt;This method is equivalent to {@link #addLast}.
+ *
+ * @param e element to be appended to this list
+ * @return {@code true} (as specified by {@link Collection#add})
+ */
+public boolean add(E e) {
+    linkLast(e);
+    return true;
+}
+</code></pre><p>16、删除一个节点：</p>
+<pre><code>/**
+ * Removes the first occurrence of the specified element from this list,
+ * if it is present.  If this list does not contain the element, it is
+ * unchanged.  More formally, removes the element with the lowest index
+ * {@code i} such that
+ * &lt;tt&gt;(o==null&amp;nbsp;?&amp;nbsp;get(i)==null&amp;nbsp;:&amp;nbsp;o.equals(get(i)))&lt;/tt&gt;
+ * (if such an element exists).  Returns {@code true} if this list
+ * contained the specified element (or equivalently, if this list
+ * changed as a result of the call).
+ *
+ * @param o element to be removed from this list, if present
+ * @return {@code true} if this list contained the specified element
+ */
+public boolean remove(Object o) {
+    if (o == null) {
+        for (Node&lt;E&gt; x = first; x != null; x = x.next) {
+            if (x.item == null) {
+                unlink(x);
+                return true;
+            }
+        }
+    } else {
+        for (Node&lt;E&gt; x = first; x != null; x = x.next) {
+            if (o.equals(x.item)) {
+                unlink(x);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+</code></pre><p>17、向链表里添加进一个集合的元素(从链表末尾开始添加)：</p>
+<pre><code>/**
+ * Appends all of the elements in the specified collection to the end of
+ * this list, in the order that they are returned by the specified
+ * collection&apos;s iterator.  The behavior of this operation is undefined if
+ * the specified collection is modified while the operation is in
+ * progress.  (Note that this will occur if the specified collection is
+ * this list, and it&apos;s nonempty.)
+ *
+ * @param c collection containing elements to be added to this list
+ * @return {@code true} if this list changed as a result of the call
+ * @throws NullPointerException if the specified collection is null
+ */
+public boolean addAll(Collection&lt;? extends E&gt; c) {
+    return addAll(size, c);
+}
+</code></pre><p>18、向链表添加一个集合的元素：addAll()方法：</p>
+<pre><code>/**
+ * Inserts all of the elements in the specified collection into this
+ * list, starting at the specified position.  Shifts the element
+ * currently at that position (if any) and any subsequent elements to
+ * the right (increases their indices).  The new elements will appear
+ * in the list in the order that they are returned by the
+ * specified collection&apos;s iterator.
+ *
+ * @param index index at which to insert the first element
+ *              from the specified collection
+ * @param c collection containing elements to be added to this list
+ * @return {@code true} if this list changed as a result of the call
+ * @throws IndexOutOfBoundsException {@inheritDoc}
+ * @throws NullPointerException if the specified collection is null
+ */
+public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
+    checkPositionIndex(index);
+
+    Object[] a = c.toArray();
+    int numNew = a.length;
+    if (numNew == 0)
+        return false;
+
+    Node&lt;E&gt; pred, succ;
+    if (index == size) {
+        succ = null;
+        pred = last;
+    } else {
+        succ = node(index);
+        pred = succ.prev;
+    }
+
+    for (Object o : a) {
+        @SuppressWarnings(&quot;unchecked&quot;) E e = (E) o;
+        Node&lt;E&gt; newNode = new Node&lt;&gt;(pred, e, null);
+        if (pred == null)
+            first = newNode;
+        else
+            pred.next = newNode;
+        pred = newNode;
+    }
+
+    if (succ == null) {
+        last = pred;
+    } else {
+        pred.next = succ;
+        succ.prev = pred;
+    }
+
+    size += numNew;
+    modCount++;
+    return true;
+}
+</code></pre><p>19、LinkedList集合的clear方法：</p>
+<pre><code>/**
+ * Removes all of the elements from this list.
+ * The list will be empty after this call returns.
+ * 因为是链表结构的，所以要从first一直往后遍历并删除。
+ */
+public void clear() {
+    // Clearing all of the links between nodes is &quot;unnecessary&quot;, but:
+    // - helps a generational GC if the discarded nodes inhabit
+    //   more than one generation
+    // - is sure to free memory even if there is a reachable Iterator
+    for (Node&lt;E&gt; x = first; x != null; ) {
+        Node&lt;E&gt; next = x.next;
+        x.item = null;
+        x.next = null;
+        x.prev = null;
+        x = next;
+    }
+    first = last = null;
+    size = 0;
+    modCount++;
+}
+</code></pre><p>20、获取指定位置的元素，随机访问：</p>
+<pre><code>/**
+ * Returns the element at the specified position in this list.
+ *
+ * @param index index of the element to return
+ * @return the element at the specified position in this list
+ * @throws IndexOutOfBoundsException {@inheritDoc}
+ */
+public E get(int index) {
+    checkElementIndex(index);
+    return node(index).item;
+}
+</code></pre><p>21、替换index处的元素：</p>
+<pre><code>/**
+ * Replaces the element at the specified position in this list with the
+ * specified element.
+ *
+ * @param index index of the element to replace
+ * @param element element to be stored at the specified position
+ * @return the element previously at the specified position
+ * @throws IndexOutOfBoundsException {@inheritDoc}
+ */
+public E set(int index, E element) {
+    checkElementIndex(index);
+    Node&lt;E&gt; x = node(index);
+    E oldVal = x.item;
+    x.item = element;
+    return oldVal;
+}
+</code></pre><p>22、在index处添加一个元素：</p>
+<pre><code>/**
+ * Inserts the specified element at the specified position in this list.
+ * Shifts the element currently at that position (if any) and any
+ * subsequent elements to the right (adds one to their indices).
+ *
+ * @param index index at which the specified element is to be inserted
+ * @param element element to be inserted
+ * @throws IndexOutOfBoundsException {@inheritDoc}
+ */
+public void add(int index, E element) {
+    checkPositionIndex(index);
+
+    if (index == size)
+        linkLast(element);
+    else
+        linkBefore(element, node(index));
+}
+</code></pre><p>23、移除index的元素：</p>
+<pre><code>/**
+ * Removes the element at the specified position in this list.  Shifts any
+ * subsequent elements to the left (subtracts one from their indices).
+ * Returns the element that was removed from the list.
+ *
+ * @param index the index of the element to be removed
+ * @return the element previously at the specified position
+ * @throws IndexOutOfBoundsException {@inheritDoc}
+ */
+public E remove(int index) {
+    checkElementIndex(index);
+    return unlink(node(index));
+}
+</code></pre><p>24、判断index的数值是否在0~size之间：</p>
+<pre><code>/**
+ * Tells if the argument is the index of an existing element.
+ */
+private boolean isElementIndex(int index) {
+    return index &gt;= 0 &amp;&amp; index &lt; size;
+}
+
+/**
+ * Tells if the argument is the index of a valid position for an
+ * iterator or an add operation.
+ */
+private boolean isPositionIndex(int index) {
+    return index &gt;= 0 &amp;&amp; index &lt;= size;
+}
+
+这个两个方法一样，只是使用的位置不一样，所以取不同的名字，方便代码的阅读
+</code></pre><p>25、检查index的数值是否在0~size之间，如果不在这区间，直接抛出异常：</p>
+<pre><code>private void checkElementIndex(int index) {
+    if (!isElementIndex(index))
+        throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+}
+
+private void checkPositionIndex(int index) {
+    if (!isPositionIndex(index))
+        throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+}
+
+
+两个方法的功能一样，原理同上。
+</code></pre><p>26、根据index返回节点(节点和索引建立联系的关键方法)：</p>
+<pre><code>/**
+ * Returns the (non-null) Node at the specified element index.
+ * 这里有个小技巧，如果index&lt; size/2,从first往后遍历直到index处；如果index &gt; size/2，从last往前遍历直到index处，时间复杂度为O(n/2)
+ */
+Node&lt;E&gt; node(int index) {
+    // assert isElementIndex(index);
+
+    if (index &lt; (size &gt;&gt; 1)) {
+        Node&lt;E&gt; x = first;
+        for (int i = 0; i &lt; index; i++)
+            x = x.next;
+        return x;
+    } else {
+        Node&lt;E&gt; x = last;
+        for (int i = size - 1; i &gt; index; i--)
+            x = x.prev;
+        return x;
+    }
+}
+</code></pre><p>27、查询元素o在链表中的索引：</p>
+<pre><code>/**
+ * Returns the index of the first occurrence of the specified element
+ * in this list, or -1 if this list does not contain the element.
+ * More formally, returns the lowest index {@code i} such that
+ * &lt;tt&gt;(o==null&amp;nbsp;?&amp;nbsp;get(i)==null&amp;nbsp;:&amp;nbsp;o.equals(get(i)))&lt;/tt&gt;,
+ * or -1 if there is no such index.
+ *
+ * @param o element to search for
+ * @return the index of the first occurrence of the specified element in
+ *         this list, or -1 if this list does not contain the element
+ */
+public int indexOf(Object o) {
+    int index = 0;
+    if (o == null) {
+        for (Node&lt;E&gt; x = first; x != null; x = x.next) {
+            if (x.item == null)
+                return index;
+            index++;
+        }
+    } else {
+        for (Node&lt;E&gt; x = first; x != null; x = x.next) {
+            if (o.equals(x.item))
+                return index;
+            index++;
+        }
+    }
+    return -1;
+}
+</code></pre><p>28、获取Queue头节点上的数据，如果链表为空，返回null：</p>
+<pre><code>Queue的peek操作：
+
+/**
+ * 
+ * Retrieves, but does not remove, the head (first element) of this list.
+ *
+ * @return the head of this list, or {@code null} if this list is empty
+ * @since 1.5
+ */
+public E peek() {
+    final Node&lt;E&gt; f = first;
+    return (f == null) ? null : f.item;
+}
+</code></pre><p>29、获取Queue头结点上的数据，如果链表为空，抛出异常：</p>
+<pre><code>Queue的peek操作：
+
+/**
+ * Retrieves, but does not remove, the head (first element) of this list.
+ *
+ * @return the head of this list
+ * @throws NoSuchElementException if this list is empty
+ * @since 1.5
+ */
+public E element() {
+    return getFirst();
+}
+</code></pre><p>30、获取Queue头结点上的数据，并移除头结点，如果链表为空，返回null：</p>
+<pre><code>Queue的dequeue操作(出列)：
+
+/**
+ * Retrieves and removes the head (first element) of this list.
+ *
+ * @return the head of this list, or {@code null} if this list is empty
+ * @since 1.5
+ */
+public E poll() {
+    final Node&lt;E&gt; f = first;
+    return (f == null) ? null : unlinkFirst(f);
+}
+</code></pre><p>31、获取Queue头结点上的数据，并移除头结点，如果链表为空，抛出异常：</p>
+<pre><code>Queue的dequeue操作(出列)：
+
+/**
+ * Retrieves and removes the head (first element) of this list.
+ *
+ * @return the head of this list
+ * @throws NoSuchElementException if this list is empty
+ * @since 1.5
+ */
+public E remove() {
+    return removeFirst();
+}
+</code></pre><p>32、往Queue的尾部添加一个节点，并返回true(不会添加失败)：</p>
+<pre><code>Queue的enqueue操作(入列)：
+
+/**
+ * Adds the specified element as the tail (last element) of this list.
+ *
+ * @param e the element to add
+ * @return {@code true} (as specified by {@link Queue#offer})
+ * @since 1.5
+ */
+public boolean offer(E e) {
+    return add(e);
+}
+</code></pre><p>33、往Deque的头部添加一个节点：</p>
+<pre><code>双端队列的头部添加一个节点：
+
+/**
+ * Inserts the specified element at the front of this list.
+ *
+ * @param e the element to insert
+ * @return {@code true} (as specified by {@link Deque#offerFirst})
+ * @since 1.6
+ */
+public boolean offerFirst(E e) {
+    addFirst(e);
+    return true;
+}
+</code></pre><p>34、往Deque的尾部添加一个节点：</p>
+<pre><code>双端队列的尾部添加一个节点：
+
+/**
+ * Inserts the specified element at the end of this list.
+ *
+ * @param e the element to insert
+ * @return {@code true} (as specified by {@link Deque#offerLast})
+ * @since 1.6
+ */
+public boolean offerLast(E e) {
+    addLast(e);
+    return true;
+}
+</code></pre><p>35、获取Deque的头结点的数据，并删除该节点：</p>
+<pre><code>双端队列的peekFirst操作：
+
+/**
+ * Retrieves, but does not remove, the first element of this list,
+ * or returns {@code null} if this list is empty.
+ *
+ * @return the first element of this list, or {@code null}
+ *         if this list is empty
+ * @since 1.6
+ */
+public E peekFirst() {
+    final Node&lt;E&gt; f = first;
+    return (f == null) ? null : f.item;
+ }
+</code></pre><p>36、获取Deque的尾节点的数据，并删除该节点：</p>
+<pre><code>双端队列的peekLast操作：
+
+/**
+ * Retrieves, but does not remove, the last element of this list,
+ * or returns {@code null} if this list is empty.
+ *
+ * @return the last element of this list, or {@code null}
+ *         if this list is empty
+ * @since 1.6
+ */
+public E peekLast() {
+    final Node&lt;E&gt; l = last;
+    return (l == null) ? null : l.item;
+}
+</code></pre><p>37、移除Deque的头结点，并返回头结点的数据：</p>
+<pre><code>双端队列的pollFirst操作：
+
+/**
+ * Retrieves and removes the first element of this list,
+ * or returns {@code null} if this list is empty.
+ *
+ * @return the first element of this list, or {@code null} if
+ *     this list is empty
+ * @since 1.6
+ */
+public E pollFirst() {
+    final Node&lt;E&gt; f = first;
+    return (f == null) ? null : unlinkFirst(f);
+}
+</code></pre><p>38、移除Deque的尾节点，并返回尾节点的数据：</p>
+<pre><code>双端队列的pollLast操作：
+
+/**
+ * Retrieves and removes the last element of this list,
+ * or returns {@code null} if this list is empty.
+ *
+ * @return the last element of this list, or {@code null} if
+ *     this list is empty
+ * @since 1.6
+ */
+public E pollLast() {
+    final Node&lt;E&gt; l = last;
+    return (l == null) ? null : unlinkLast(l);
+}
+</code></pre><p>39、往stack里压栈：</p>
+<pre><code>/**压栈是将数据添加到链表的头结点处
+ * Pushes an element onto the stack represented by this list.  In other
+ * words, inserts the element at the front of this list.
+ *
+ * &lt;p&gt;This method is equivalent to {@link #addFirst}.
+ *
+ * @param e the element to push
+ * @since 1.6
+ */
+public void push(E e) {
+    addFirst(e);
+}
+</code></pre><p>40、stack出栈：</p>
+<pre><code>/**出栈是获取头结点的数据，并删除头结点
+ * Pops an element from the stack represented by this list.  In other
+ * words, removes and returns the first element of this list.
+ *
+ * &lt;p&gt;This method is equivalent to {@link #removeFirst()}.
+ *
+ * @return the element at the front of this list (which is the top
+ *         of the stack represented by this list)
+ * @throws NoSuchElementException if this list is empty
+ * @since 1.6
+ */
+public E pop() {
+    return removeFirst();
+}
+</code></pre><p>LinkedList没有重新实现iterator()方法，但是实现了listIterator()方法：</p>
+<pre><code>public ListIterator&lt;E&gt; listIterator(int index) {
+    checkPositionIndex(index);
+    return new ListItr(index);
+}
+</code></pre><p>还是有一个反向迭代的方法descendingIterator()：</p>
+<pre><code>/**
+ * @since 1.6
+ */
+public Iterator&lt;E&gt; descendingIterator() {
+    return new DescendingIterator();
+}
+
+/**
+ * Adapter to provide descending iterators via ListItr.previous
+ */
+private class DescendingIterator implements Iterator&lt;E&gt; {
+    private final ListItr itr = new ListItr(size());
+    public boolean hasNext() {
+        return itr.hasPrevious();
+    }
+    public E next() {
+        return itr.previous();
+    }
+    public void remove() {
+        itr.remove();
+    }
+}
+</code></pre><h3 id="LinkedList和ArrayList比较"><a href="#LinkedList和ArrayList比较" class="headerlink" title="LinkedList和ArrayList比较"></a>LinkedList和ArrayList比较</h3><ul>
+<li>ArrayList继承于AbstractList，LinkedList继承于AbstractSequentialList；而AbstractSequentialList又继承于AbstractList。</li>
+<li>ArrayList基于数组，LinkedList基于双向链表，对于随机访问，ArrayList比较占优势，对于插入删除，LinkedList占优势。遍历LinkedList时千万不要用普通for + get(index)的方式去遍历，因为每个get(index)方法的时间复杂度都是O(n/2)。</li>
+<li>LinkedList没有实现自己的Iterator，但是有ListIterator和DescendingIteratror(反向迭代器)</li>
+<li>LinkedList需要更多的内存，因为ArrayList的每个索引的位置是实际存储数据的位置，而LinkedList中的每个节点存储的是实际的数据和前后节点的位置。</li>
+<li>ArrayList和LinkedList都是非同步的集合。</li>
+</ul>
+
+  </section>
+
+</article>
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/06/08Java集合05-LinkedList详解(二)/" title=""></a></h2>
+                <p class="excerpt">
+                
+                
+LinkedList继承自AbstractSequentialList，实现了List接口，同时还实现了Deque接口。也就是说它既可以看做一个顺序容器，又可以看做一个队列(Queue)，同时又可以看做一个栈(Stack)。这样看来，LinkedList简直就是个全能冠军。当你需要使用栈或者队列的
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-06T08:26:51.720Z" class="post-list__meta--date date">2017-03-06</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/06/08Java集合05-LinkedList详解(二)/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/03/06Java集合03-ArrayList详解/" title=""></a></h2>
+                <p class="excerpt">
+                
+                ArrayList介绍ArrayList是一个数组队列，相当于动态数组。与Java中的数组相比，它的容量能动态增长。 它继承与AbstractList，实现了List，RandomAccess，Cloneable，java.io.Serializable这些接口。
+ArrayList继承了Abstr
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-03T00:01:28.710Z" class="post-list__meta--date date">2017-03-02</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/03/06Java集合03-ArrayList详解/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+            
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    <span class="footer__copyright">
+        基于 <a href="http://hexo.io">Hexo</a> 搭建，感谢 <a href="https://pages.github.com/">GitHub Pages</a> 提供免费的托管服务
+    </span>
+    <span class="footer__copyright">
+        &copy; 2017 - 本站由 <a href="/">@Monniya</a> 创建,
+        使用 <a href="https://github.com/monniya/hexo-theme-new-vno ">hexo-theme-new-vno</a> 主题,
+        修改自 <a href="https://github.com/lenbo-ma/hexo-theme-vno" target="_blank">Vno</a>, 原创出自<a href="http://github.com/onevcat/vno" target="_blank">onevcat</a>
+    </span>
+</footer>
+        </div>
+    </div>
+
+    
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+    
+    </script>
+    
+</body>
+</html>

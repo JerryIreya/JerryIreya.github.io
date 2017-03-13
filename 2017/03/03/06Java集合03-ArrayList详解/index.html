@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Little Piggy</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="Android">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Little Piggy">
+    <meta name="twitter:description" content="Android">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Little Piggy">
+    <meta property="og:description" content="Android">
+
+    
+    <meta name="author" content="Jerry">
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+    <link rel="alternate" type="application/rss+xml" title="Little Piggy" href="/atom.xml">
+    
+
+    <link rel="canonical" href="http://yoursite.com/2017/03/03/06Java集合03-ArrayList详解/"/>
+
+    
+      
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Little Piggy 的主页"><img src="/images/avatar.jpg" width="80" alt="Little Piggy logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Little Piggy">Little Piggy</a></h1>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">Android</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+              <li class="navigation__item"><a href="/favourite">黄金屋</a></li>
+            
+              <li class="navigation__item"><a href="/favourite/time.html">时光机</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/monniya" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  <li class="navigation__item">
+    <a href="https://twitter.com/onlymonniya" title="上Twitter找我" target="_blank">
+      <i class='social fa fa-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+
+  
+
+  <li class="navigation__item">
+    <a href="/atom.xml" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2017-03-03T00:01:28.710Z" class="post-list__meta--date date">2017-03-02</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title"></h1>
+  </header>
+
+  <section class="post">
+    <h3 id="ArrayList介绍"><a href="#ArrayList介绍" class="headerlink" title="ArrayList介绍"></a>ArrayList介绍</h3><p>ArrayList是一个数组队列，相当于<strong>动态数组</strong>。与Java中的数组相比，它的容量能动态增长。 它继承与AbstractList，实现了List，RandomAccess，Cloneable，java.io.Serializable这些接口。</p>
+<p>ArrayList继承了AbstractList，实现了List。它是一个数组队列，提供了相关的增加、删除、修改、遍历等功能。</p>
+<p>ArrayList实现了RandomAccess接口，即提供了随机访问功能。RandomAccess是java中用来被List实现，为List提供快速访问功能的。在ArrayList中，我们即可以通过元素的序号快速获取元素对象，这就是快速随机访问。</p>
+<p>ArrayList实现了Cloneable接口，即覆盖了函数clone()，能被克隆。</p>
+<p>ArrayList实现了java.io.Serializable接口，这意味着ArrayList支持序列化，能通过序列化去传输。</p>
+<h4 id="ArrayList构造函数"><a href="#ArrayList构造函数" class="headerlink" title="ArrayList构造函数"></a>ArrayList构造函数</h4><pre><code>// 默认构造函数
+ArrayList()
+
+// capacity是ArrayList的默认容量大小。当由于增加数据导致容量不足时，容量会添加上一次容量大小的一半。
+ArrayList(int capacity)
+
+// 创建一个包含collection的ArrayList
+ArrayList(Collection&lt;? extends E&gt; collection)
+</code></pre><h4 id="ArrayList的API"><a href="#ArrayList的API" class="headerlink" title="ArrayList的API"></a>ArrayList的API</h4><pre><code>// Collection中定义的API
+boolean             add(E object)
+boolean             addAll(Collection&lt;? extends E&gt; collection)
+void                clear()
+boolean             contains(Object object)
+boolean             containsAll(Collection&lt;?&gt; collection)
+boolean             equals(Object object)
+int                 hashCode()
+boolean             isEmpty()
+Iterator&lt;E&gt;         iterator()
+boolean             remove(Object object)
+boolean             removeAll(Collection&lt;?&gt; collection)
+boolean             retainAll(Collection&lt;?&gt; collection)
+int                 size()
+&lt;T&gt; T[]             toArray(T[] array)
+Object[]            toArray()
+// List中定义的API
+void                add(int location, E object)
+boolean             addAll(int location, Collection&lt;? extends E&gt; collection)
+E                   get(int location)
+int                 indexOf(Object object)
+int                 lastIndexOf(Object object)
+ListIterator&lt;E&gt;     listIterator(int location)
+ListIterator&lt;E&gt;     listIterator()
+E                   remove(int location)
+E                   set(int location, E object)
+List&lt;E&gt;             subList(int start, int end)
+// ArrayList新增的API
+Object               clone()
+void                 ensureCapacity(int minimumCapacity)
+void                 trimToSize()
+void                 removeRange(int fromIndex, int toIndex)
+</code></pre><h3 id="ArrayList数据结构"><a href="#ArrayList数据结构" class="headerlink" title="ArrayList数据结构"></a>ArrayList数据结构</h3><h4 id="ArrayList的继承关系"><a href="#ArrayList的继承关系" class="headerlink" title="ArrayList的继承关系"></a>ArrayList的继承关系</h4><pre><code>java.lang.Object
+   ↳     java.util.AbstractCollection&lt;E&gt;
+         ↳     java.util.AbstractList&lt;E&gt;
+               ↳     java.util.ArrayList&lt;E&gt;
+
+public class ArrayList&lt;E&gt; extends AbstractList&lt;E&gt;
+        implements List&lt;E&gt;, RandomAccess, Cloneable, java.io.Serializable {}
+</code></pre><h4 id="ArrayList与Collection关系如下图："><a href="#ArrayList与Collection关系如下图：" class="headerlink" title="ArrayList与Collection关系如下图："></a>ArrayList与Collection关系如下图：</h4><p><img src="http://i.imgur.com/c887eCv.jpg" alt=""></p>
+<p>ArrayList包含了两个重要的对象：elementData和size</p>
+<p>1、elementData是“Object[]类型的数组”，它保存了添加到ArrayList中的元素。实际上，elementData是个动态数组，我们能通过构造函数ArrayList(int initialCapacity)来指定它的初始容量为initialCapacity；如果通过不含参数的构造函数ArrayList()来创建ArrayList，则elementData的容量默认是10.elementData数组的大小会根据ArrayList容量的增长而动态的增长，具体的增长方式，参考源码中的ensureCapacity()函数。</p>
+<p>2、size则是动态数组的实际大小。</p>
+<h3 id="ArrayList源码"><a href="#ArrayList源码" class="headerlink" title="ArrayList源码"></a>ArrayList源码</h3><p>看ArrayList源码，很简单</p>
+<h3 id="ArrayList遍历方式"><a href="#ArrayList遍历方式" class="headerlink" title="ArrayList遍历方式"></a>ArrayList遍历方式</h3><p>有三种：  随机访问(普通for循环)、迭代器、增强for</p>
+<p>其中随机访问(普通for循环，通过索引访问)效率最高，使用迭代器效率最低，因为要内部要维护一个Iterator对象；foreach的本质也是迭代器；在使用迭代器遍历ArrayList的时候，如果使用ArrayList的方法修改了集合的长度(调用了ArrayList的add或remove等其他能修改集合长度的方法)，那么迭代器就会抛出ConcurrentModificationException，这就是fail-fast机制。</p>
+<h3 id="fail-fast机制"><a href="#fail-fast机制" class="headerlink" title="fail-fast机制"></a>fail-fast机制</h3><p>如果使用普通for遍历一个ArrayList，在遍历的同时可以通过调用ArrayList的add、remove等方法去改变集合的长度，虽然不会报错，但是会有意想不到的结果：</p>
+<pre><code>/** 
+ * 这种遍历有可能会遗漏某个元素,因为删除元素后List的size在 
+ * 变化，元素的索引也在变化，比如你循环到第2个元素的时候你把它删了， 
+ * 接下来你去访问第3个元素，实际上访问到的是原先的第4个元素。当访问的元素 
+ * 索引超过了当前的List的size后还会出现数组越界的异常，当然这里不会出现这种异常， 
+ * 因为这里每遍历一次都重新拿了一次当前List的size。 
+ */  
+public void listRemove2() {  
+    List&lt;Student&gt; students = this.getStudents();  
+    for (int i=0; i&lt;students.size(); i++) {  
+        if (students.get(i).getId()%3 == 0) {  
+            Student student = students.get(i);  
+            students.remove(student);  
+        }  
+    }  
+}  
+</code></pre><p>Java为了避免这种意想不到的情况出现，就出现了fail-fast(快速失败)机制。在集合里面有一个成员变量modCount来记录集合长度改变的次数，就是在集合的add、remove、trimToSize等改变集合长度的方法里面会对该值进行+1操作；当我们使用Iterator去遍历一个集合的时候，在生成Iterator对象时会记录一个expectedModCount=modCount；每次调用Iterator对象的next()方法时都会检查这两个值是否相等；因为modCount只有在集合的长度发生变化的时候才有可能改变，一旦它改变了，那么expectedModCount就和modCount不相等了，就直接抛出ConcurrentModificationException。用抛异常的方式去避免<strong>意想不到的结果</strong></p>
+<p>看看官方的解释：</p>
+<p>ArrayList的iterator和listIterator方法返回的迭代器是快速失败的：在创建迭代器之后，除非通过迭代器自身的remove或add方法从结构上对列表进行修改，否则在任何时间以任何方式对列表进行修改，迭代器都会抛出ConcurrentModificationException。因此，面对并发修改，迭代器很快就会完全失败，而不是冒着在将来某个不确定的时间发生任意不确定行为的风险。</p>
+<p>为了实现fail-fast机制，ArrayList从AbstractList继承了protected transient int modCount字段，表示已经从结构上修改此列表的次数。从结构上修改是指更改列表的大小，或者以其他方式打乱列表，使正在进行的迭代产生错误的结果。</p>
+<p>此字段由iterator和listIterator方法返回的迭代器和列表迭代器实现来使用。如果意外更改了此字段中的值，则迭代器或列表迭代器将抛出ConcurrentModificationException来响应next、remove、previous、set或add操作。在迭代期间面临并发修改时，它提供了快速失败行为，而不是非确定性行为。</p>
+<p>子类是否使用此字段是可选的。如果子类希望提供快速失败迭代器或列表迭代器，则它只需在其add()和remove()方法(以及它所重写的、导致列表结构上修改的任何其他方法)中增加此字段。对add()或remove()单个调用此字段添加的数量不得超过1，否则迭代器将抛出虚假的ConcurrentModificationException。如果某个实现不希望提供快速失败迭代器，则可忽略此字段。</p>
+<h3 id="ArrayList遍历的同时修改集合中的元素-改变ArrayList的长度"><a href="#ArrayList遍历的同时修改集合中的元素-改变ArrayList的长度" class="headerlink" title="ArrayList遍历的同时修改集合中的元素(改变ArrayList的长度)"></a>ArrayList遍历的同时修改集合中的元素(改变ArrayList的长度)</h3><p>上面讲了，普通for循环遍历集合的时候最好不要修改集合的长度，因为异常不可怕，可怕的是<strong>意想不到的结果</strong>。</p>
+<ol>
+<li>虽然普通for循环效率很高，但是如果在遍历的过程中有修改集合长度的操作，容易引起<strong>意想不到的结果</strong>，所以普通for循环不适用；当然了，如果只是遍历集合，在遍历的过程中并没有改变集合长度的操作，用普通for循环还是很合理的。</li>
+<li>使用Iterator迭代器遍历集合(包括iterator方法生成的迭代器对象，或者foreach)时，如果调用了集合的add、remove、trimToSize等改变集合长度的方法又会抛出并发修改异常。</li>
+</ol>
+<p>如果既不想引起<strong>意想不到的结果</strong>，又不想<strong>抛出异常</strong>(前提是在遍历的同时有改变集合长度的操作，否则直接用普通for循环即可)，我们可以有以下几种解决方案：</p>
+<p>1、使用Iterator的remove和add方法：</p>
+<pre><code>// 删除/修改元素 
+Iterator&lt;String&gt; it = list.iterator(); 
+while(it.hasNext()){ 
+    String ele = it.next(); 
+    it.remove(); //调用Iterator对象的remove方法。
+} 
+</code></pre><p>2、使用CopyOnWriteArrayList替代ArrayList，CopyOnWriteArrayList可以在使用迭代器遍历的同时调用集合的add或remove方法改变集合长度，而不引起并发修改异常。</p>
+<pre><code>//list是CopyOnWriteArrayList类型的。
+for(String item : list){ 
+    list.remove(item); 
+} 
+</code></pre><p>使用CopyOnWriteArrayList增加或删除元素的时候，会先将内部维护的数组复制一份，对副本进行操作，然后把之前的数组变量指向副本数组。<strong>但是在Iterator迭代器的生存期内所遍历的数组一直都是之前的数组(这就是快照(snapshot)),所以不会出现异常</strong>。CopyOnWriteArrayList的add和remove方法都是加锁的，即线程安全和同步的，不用担心并发访问带来的问题。</p>
+<p>注意：CopyOnWriteArrayList内部的Iterator对象不支持remove和add：</p>
+<pre><code>public void add(E object) {
+        throw new UnsupportedOperationException();
+    }
+
+public void remove() {
+        throw new UnsupportedOperationException();
+    }
+</code></pre><p>所以使用迭代器遍历CopyOnWriteArrayList的时候需要调用CopyOnWriteArrayList集合对象的add和remove方法对集合进行修改。</p>
+<h3 id="ArrayList并发修改"><a href="#ArrayList并发修改" class="headerlink" title="ArrayList并发修改"></a>ArrayList并发修改</h3><p>ArrayList是线程不同步的，也就是线程不安全的。</p>
+<p>多线程同时访问一个数据免不了会产生问题，更何况是一个集合，有那么多改变集合的方法。</p>
+<p>ArrayList非线程同步，所以效率就比较高；如果是单线程就使用ArrayList。</p>
+<p>Vector和ArrayList几乎一样，只不过是在所有可能改变集合数据的方法上面都加上了锁，这也就意味着Vector的效率不如ArrayList，因为它需要额外的开销去维护锁对象。</p>
+<p>CopyOnWriteArrayList也是线程同步的。多线程里也可以使用。同样是效率低。另外该类在所有改变集合struct(结构)的方法里都会复制出原始数组的副本，然后去修改副本,修改完之后再将之前的数组变量指向副本。所以该类如果执行大量的增删操作，会占用很大的内存空间(改变一次集合长度，就要复制出来一个副本)。CopyOnWriteArrayList适合用在遍历操作的数量大大超过可变操作的数量的情况下。</p>
+
+  </section>
+
+</article>
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/05/07Java集合04-LinkedList详解/" title=""></a></h2>
+                <p class="excerpt">
+                
+                LinkedList简介public class LinkedList&amp;lt;E&amp;gt; extends AbstractSequentialList&amp;lt;E&amp;gt;
+implements List&amp;lt;E&amp;gt;, Deque&amp;lt;E&amp;gt;, Cloneable, java.io.Seri
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-05T08:26:17.330Z" class="post-list__meta--date date">2017-03-05</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/05/07Java集合04-LinkedList详解/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/01/05Java集合02-Collection架构/" title=""></a></h2>
+                <p class="excerpt">
+                
+                
+Collection是一个接口，它主要的两个分支是：List和Set
+List和Set都是接口，他们继承于Collection。List是有序的队列，List中可以有重复的元素，List取出顺序和存取顺序一样；而Set中没有重复元素，并且取出顺序和存取顺序不同，并且取出顺序有可能发生改变。
+为了方
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-01T08:22:35.859Z" class="post-list__meta--date date">2017-03-01</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/01/05Java集合02-Collection架构/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+            
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    <span class="footer__copyright">
+        基于 <a href="http://hexo.io">Hexo</a> 搭建，感谢 <a href="https://pages.github.com/">GitHub Pages</a> 提供免费的托管服务
+    </span>
+    <span class="footer__copyright">
+        &copy; 2017 - 本站由 <a href="/">@Monniya</a> 创建,
+        使用 <a href="https://github.com/monniya/hexo-theme-new-vno ">hexo-theme-new-vno</a> 主题,
+        修改自 <a href="https://github.com/lenbo-ma/hexo-theme-vno" target="_blank">Vno</a>, 原创出自<a href="http://github.com/onevcat/vno" target="_blank">onevcat</a>
+    </span>
+</footer>
+        </div>
+    </div>
+
+    
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+    
+    </script>
+    
+</body>
+</html>

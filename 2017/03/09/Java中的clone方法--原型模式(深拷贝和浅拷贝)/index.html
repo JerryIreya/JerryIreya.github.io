@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Little Piggy</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="Android">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Little Piggy">
+    <meta name="twitter:description" content="Android">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Little Piggy">
+    <meta property="og:description" content="Android">
+
+    
+    <meta name="author" content="Jerry">
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+    <link rel="alternate" type="application/rss+xml" title="Little Piggy" href="/atom.xml">
+    
+
+    <link rel="canonical" href="http://yoursite.com/2017/03/09/Java中的clone方法--原型模式(深拷贝和浅拷贝)/"/>
+
+    
+      
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Little Piggy 的主页"><img src="/images/avatar.jpg" width="80" alt="Little Piggy logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Little Piggy">Little Piggy</a></h1>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">Android</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+              <li class="navigation__item"><a href="/favourite">黄金屋</a></li>
+            
+              <li class="navigation__item"><a href="/favourite/time.html">时光机</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/monniya" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  <li class="navigation__item">
+    <a href="https://twitter.com/onlymonniya" title="上Twitter找我" target="_blank">
+      <i class='social fa fa-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+
+  
+
+  <li class="navigation__item">
+    <a href="/atom.xml" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2017-03-09T01:09:53.412Z" class="post-list__meta--date date">2017-03-08</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title"></h1>
+  </header>
+
+  <section class="post">
+    <h2 id="深拷贝和浅拷贝的区别"><a href="#深拷贝和浅拷贝的区别" class="headerlink" title="深拷贝和浅拷贝的区别"></a>深拷贝和浅拷贝的区别</h2><p>浅拷贝：浅拷贝只是拷贝本对象的原始数据类型，如int、float、long、String(String虽然是引用数据类型，但是Java希望把它当做基本类型来使用，Object的clone会自动将其拷贝；String没有clone方法的，也没有实现Cloneable接口)，对于数组和对象引用等是不会拷贝的。因此，浅拷贝是有风险的。</p>
+<p>深拷贝：不但对原始数据类型进行拷贝，对于对象中的数组和对象引用也做拷贝的行为，从而达到对对象的完全拷贝。</p>
+<p>简单的例子：</p>
+<pre><code>public class Test implements Cloneable {  
+
+    // 私有属性  
+    private ArrayList&lt;String&gt; nameList = new ArrayList&lt;String&gt;();  
+
+    // 添加内容  
+    public void add(String s) {  
+        this.nameList.add(s);  
+    }  
+
+    // 获得ArrayList对象  
+    public ArrayList&lt;String&gt; get() {  
+        return this.nameList;  
+    }  
+
+    // clone方法  
+    @Override  
+    public Test clone() {  
+        try {  
+            Test test = (Test) super.clone();  
+            test.nameList = (ArrayList&lt;String&gt;) this.nameList.clone();    //A  
+            return test;  
+        } catch (CloneNotSupportedException e) {  
+            // TODO Auto-generated catch block  
+            e.printStackTrace();  
+        }  
+        return null;  
+    }  
+
+    /** 
+     * @param args 
+     */  
+    public static void main(String[] args) {  
+        // 创建test对象  
+        Test test = new Test();  
+        // 设置test对象内容  
+        test.add(&quot;aa&quot;);  
+        test.add(&quot;bb&quot;);  
+
+        // 打印显示test中的nameList内容  
+        System.out.println(&quot;test:&quot; + test.get());  
+
+        // 克隆test对象生成test2对象  
+        Test test2 = test.clone();  
+        // 添加&quot;cc&quot;内容到test2对象中  
+        test2.add(&quot;cc&quot;);  
+        // 打印显示test2中的nameList内容  
+        System.out.println(&quot;test2:&quot; + test2.get());  
+
+        // 打印显示test中的nameList内容  
+        System.out.println(&quot;test:&quot; + test.get());  
+
+    }  
+}
+</code></pre><p>上面的代码中，如果将<code>//A</code>处注释掉，就是浅拷贝，运行结果如下：</p>
+<pre><code>test:[aa, bb]
+test2:[aa, bb, cc]
+test:[aa, bb, cc]
+</code></pre><p>如果将<code>//A</code>处注释打开，就是深拷贝，运行结果如下：</p>
+<pre><code>test:[aa, bb]
+test2:[aa, bb, cc]
+test:[aa, bb]
+</code></pre><p>小结：深拷贝就是将对象中的所有引用类型全部再做深拷贝。</p>
+<h2 id="详解Java中的clone方法-–-原型模式"><a href="#详解Java中的clone方法-–-原型模式" class="headerlink" title="详解Java中的clone方法 – 原型模式"></a>详解Java中的clone方法 – 原型模式</h2><h3 id="Java中对象的创建"><a href="#Java中对象的创建" class="headerlink" title="Java中对象的创建"></a>Java中对象的创建</h3><p>clone顾名思义就是复制，在Java语言中，clone方法被对象调用，所以会复制对象。所谓的复制对象，首先要分配一个和源对象同样大小的堆空间，在这个空间中创建一个新的对象。在Java语言中可以用以下两种方式创建一个对象：</p>
+<ul>
+<li>使用new操作符创建一个对象</li>
+<li>使用clone方法复制一个对象</li>
+</ul>
+<p>那么这两种方式有什么相同和不同呢？new操作符的本意是分配内存。程序执行到new操作符时，首先去看new操作符后面的类型，因为知道了类型，才能知道要分配多大的内存空间。分配完内存之后，再调用构造函数，填充对象的各个域，这一步叫做对象的初始化，构造方法返回后，一个对象创建完毕，可以把它的引用(地址)发布到外部，在外部就可以使用这个引用操作这个对象。而clone在第一步是和new相似的，都是分配内存，调用clone方法时，分配的内存和源对象(即调用clone方法的对象)相同，然后再使用源对象中对应的各个域，填充新对象的域，填充完之后，clone方法返回，一个新的相同的对象被创建，同样可以把这个新对象的引用发布到外部。</p>
+<h3 id="复制对象-or-复制引用"><a href="#复制对象-or-复制引用" class="headerlink" title="复制对象 or 复制引用"></a>复制对象 or 复制引用</h3><p>在Java中，以下类似的代码非常常见：</p>
+<pre><code>Person p = new Person(23, &quot;zhang&quot;);  
+Person p1 = p;  
+
+System.out.println(p);  
+System.out.println(p1);  
+</code></pre><p>当Person p1 = p;执行之后，是创建了一个新的对象吗？首选看打印结果：</p>
+<pre><code>com.pansoft.zhangjg.testclone.Person@2f9ee1ac
+com.pansoft.zhangjg.testclone.Person@2f9ee1ac
+</code></pre><p>可以看出，打印的地址值是相同的，既然地址值相同，肯定是同一个对象。p和p1只是引用而已，它们都指向同一个对象Person(23,”zhang”)。可以把这种现象叫做引用的复制。上面的代码执行完成之后，内存中的情景如下图所示：</p>
+<p><img src="http://i.imgur.com/GfRzdaX.png" alt=""></p>
+<p>而下面的代码是真真正正的克隆了一个对象：</p>
+<pre><code>Person p = new Person(23, &quot;zhang&quot;);  
+Person p1 = (Person) p.clone();  
+
+System.out.println(p);  
+System.out.println(p1); 
+</code></pre><p>从打印结果可以看出，两个对象的地址是不同的，也就是说创建了新的对象，而不是把原对象的地址赋值给了一个新的引用变量：</p>
+<pre><code>com.pansoft.zhangjg.testclone.Person@2f9ee1ac
+com.pansoft.zhangjg.testclone.Person@67f1fba0
+</code></pre><p>以上代码执行完成后，内存中的情景如下图所示：</p>
+<p><img src="http://i.imgur.com/tnfWTyg.png" alt=""></p>
+<h3 id="覆盖Object中的clone方法，实现深拷贝"><a href="#覆盖Object中的clone方法，实现深拷贝" class="headerlink" title="覆盖Object中的clone方法，实现深拷贝"></a>覆盖Object中的clone方法，实现深拷贝</h3><p>现在为了要在clone对象时进行深拷贝，那么就要实现Clonable接口，覆盖并实现clone方法，除了调用父类中的clone方法得到新的对象，还要将该类中的引用变量也clone出来。如果只是用Object中默认的clone方法，是浅拷贝的，再次以下面的代码验证：</p>
+<pre><code>static class Body implements Cloneable{  
+    public Head head;  
+
+    public Body() {}  
+
+    public Body(Head head) {this.head = head;}  
+
+    @Override  
+    protected Object clone() throws CloneNotSupportedException {  
+        return super.clone();  
+    }  
+
+}  
+static class Head /*implements Cloneable*/{  
+    public  Face face;  
+
+    public Head() {}  
+    public Head(Face face){this.face = face;}  
+
+}   
+public static void main(String[] args) throws CloneNotSupportedException {  
+
+    Body body = new Body(new Head());  
+
+    Body body1 = (Body) body.clone();  
+
+    System.out.println(&quot;body == body1 : &quot; + (body == body1) );  
+
+    System.out.println(&quot;body.head == body1.head : &quot; +  (body.head == body1.head));  
+
+
+} 
+</code></pre><p>在以上的代码中，有两个主要的类，分别为Body和Head，在Body类中，组合了一个Head对象。当对Body对象进行clone时，它组合的Head对象只进行浅拷贝。打印结果可以验证该结论：</p>
+<pre><code>body == body1 : false
+body.head == body1.head : true
+</code></pre><p>如果要使Body对象在clone时进行深拷贝，那么就要在Body的clone方法中，将源对象引用的Head对象也clone一份。</p>
+<pre><code>static class Body implements Cloneable{  
+    public Head head;  
+    public Body() {}  
+    public Body(Head head) {this.head = head;}  
+
+    @Override  
+    protected Object clone() throws CloneNotSupportedException {  
+        Body newBody =  (Body) super.clone();  
+        newBody.head = (Head) head.clone();  
+        return newBody;  
+    }  
+
+}  
+static class Head implements Cloneable{  
+    public  Face face;  
+
+    public Head() {}  
+    public Head(Face face){this.face = face;}  
+    @Override  
+    protected Object clone() throws CloneNotSupportedException {  
+        return super.clone();  
+    }  
+}   
+public static void main(String[] args) throws CloneNotSupportedException {  
+
+    Body body = new Body(new Head());  
+
+    Body body1 = (Body) body.clone();  
+
+    System.out.println(&quot;body == body1 : &quot; + (body == body1) );  
+
+    System.out.println(&quot;body.head == body1.head : &quot; +  (body.head == body1.head));  
+
+
+}
+</code></pre><p>打印结果为：</p>
+<pre><code>body == body1 : false
+body.head == body1.head : false
+</code></pre><p>由此可见，body和body1内的head引用指向了不同的Head对象，也就是说在clone Body对象的同时，也拷贝了它所引用的Head对象，进行了深拷贝。</p>
+<h3 id="真的是深拷贝吗"><a href="#真的是深拷贝吗" class="headerlink" title="真的是深拷贝吗"></a>真的是深拷贝吗</h3><p>由上一节的内容可以得出如下结论：<html><font color="red">如果想要深拷贝一个对象，这个对象必须要实现Cloneable接口，实现clone方法，并且在clone方法内部，把该对象引用的其他对象也要clone一份，这就要求这个被引用的对象必须也要实现Cloneable接口，并实现clone方法。</font></html></p>
+<p>那么，按照上面的结论，Body类组合了Head类，而Head类组合了Face类，要想深拷贝Body类，必须在Body类的clone方法中将Head类也要拷贝一份，但是在拷贝Head类时，默认执行的是浅拷贝，也就是说Head中组合的Face对象并不会被拷贝。验证代码如下：</p>
+<pre><code>static class Body implements Cloneable{  
+    public Head head;  
+    public Body() {}  
+    public Body(Head head) {this.head = head;}  
+
+    @Override  
+    protected Object clone() throws CloneNotSupportedException {  
+        Body newBody =  (Body) super.clone();  
+        newBody.head = (Head) head.clone();  
+        return newBody;  
+    }  
+
+}  
+
+static class Head implements Cloneable{  
+    public  Face face;  
+
+    public Head() {}  
+    public Head(Face face){this.face = face;}  
+    @Override  
+    protected Object clone() throws CloneNotSupportedException {  
+        return super.clone();  
+    }  
+}   
+
+static class Face{}  
+
+public static void main(String[] args) throws CloneNotSupportedException {  
+
+    Body body = new Body(new Head(new Face()));  
+
+    Body body1 = (Body) body.clone();  
+
+    System.out.println(&quot;body == body1 : &quot; + (body == body1) );  
+
+    System.out.println(&quot;body.head == body1.head : &quot; +  (body.head == body1.head));  
+
+    System.out.println(&quot;body.head.face == body1.head.face : &quot; +  (body.head.face == body1.head.face));  
+
+
+}
+</code></pre><p>打印结果为：</p>
+<pre><code>body == body1 : false
+body.head == body1.head : false
+body.head.face == body1.head.face : true
+</code></pre><p>内存结构图如下所示：</p>
+<p><img src="http://i.imgur.com/0uObiLg.png" alt=""></p>
+<p>那么，对Body对象来说，这算是深拷贝吗？其实应该算是深拷贝，因为Body对象内所引用的其他对象(目前只有Head对象)都进行了拷贝，也就是说两个独立的Body对象内的head引用已经指向了独立的两个Head对象。但是，这对于两个Head对象来说，他们指向了同一个Face对象，这就说明，两个Body对象还是有一定的联系，并没有完全的独立。这应该说是一种<html><font color="red">不彻底的深拷贝。</font></html></p>
+<h3 id="如何进行彻底的深拷贝"><a href="#如何进行彻底的深拷贝" class="headerlink" title="如何进行彻底的深拷贝"></a>如何进行彻底的深拷贝</h3><p>对于上面的例子来说，怎样才能保证两个Body对象完全独立呢？只要在拷贝Head对象的时候，也将Face对象拷贝一份就可以了。这需要让Face类也实现Cloneable接口，实现clone方法，并且在Head对象的clone方法中，拷贝它所引用的Face对象。修改的部分代码如下：</p>
+<pre><code>static class Head implements Cloneable{  
+    public  Face face;  
+
+    public Head() {}  
+    public Head(Face face){this.face = face;}  
+    @Override  
+    protected Object clone() throws CloneNotSupportedException {  
+        //return super.clone();  
+        Head newHead = (Head) super.clone();  
+        newHead.face = (Face) this.face.clone();  
+        return newHead;  
+    }  
+}   
+
+static class Face implements Cloneable{  
+    @Override  
+    protected Object clone() throws CloneNotSupportedException {  
+        return super.clone();  
+    }  
+} 
+</code></pre><p>再次运行上面的示例，得到的运行结果如下：</p>
+<pre><code>body == body1 : false
+body.head == body1.head : false
+body.head.face == body1.head.face : false
+</code></pre><p>这说明两个Body已经完全独立了，他们间接引用的Face对象也已经被拷贝，也就是引用了独立的Face对象。内存结构图如下：</p>
+<p><img src="http://i.imgur.com/AD5gAXO.png" alt=""></p>
+<p>一次类推，如果Face对象还引用了其他的对象，比如说Mouth，如果不经过处理，Body对象拷贝之后还是会通过一级一级的引用，引用到同一个Mouth对象。同理，如果要让Body在引用链上完全独立，只能显示的让Moutt对象也被拷贝。</p>
+<p>到此，可以得到如下结论：<html><font color="Red">如果在拷贝一个对象时，要想让这个对象和源对象完全彼此独立，那么在引用链上的每一级对象都要被显示的拷贝。</font></html>所以，创建彻底的深拷贝是非常麻烦的，尤其是在引用关系非常复杂的情况下，或者在引用链的某一级上引用了一个第三方的对象，而这个对象没有实现clone方法，那么在它之后的所有引用的对象都是被共享的。举例来说，如果被Head引用的Face类是第三方库中的类，并没有实现Cloneable接口，那么在Face之后的所有对象都会被拷贝前后的两个Body对象共同引用。假设Face对象内部组合了Mouth对象，并且Mouth对象内部组合了Tooth对象，内存结构图如下：</p>
+<p><img src="http://i.imgur.com/0LRCNSZ.png" alt=""></p>
+<h3 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h3><p>clone在平时项目的开发中可能用的不是很频繁，但是区分深拷贝和浅拷贝会让我们对java内存结构和运行方式有更深的了解。至于彻底深拷贝，几乎是不可能实现的，原因已经在上一节中进行了说明。深拷贝和彻底深拷贝，在创建不可变对象时，可能对程序有着微妙的影响，可能会决定我们创建的不可变对象是不是真的不可变。clone的一个重要的应用也是用于不可变对象的创建。</p>
+
+  </section>
+
+</article>
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/09/Java中的深拷贝和浅拷贝/" title=""></a></h2>
+                <p class="excerpt">
+                
+                浅复制与深复制概念浅复制(浅克隆)：被复制对象的所有变量都含有与原来的对象相同的值，而所有的对其他对象的引用仍指向原来的对象。换言之，浅复制仅仅复制所考虑的对象，而不复制它所引用的对象。
+深复制(深克隆)：被复制对象的所有变量都含有与原来的对象相同的值，除去那些引用其他对象的变量。那些引用其他对象的
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-09T08:13:25.876Z" class="post-list__meta--date date">2017-03-09</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/09/Java中的深拷贝和浅拷贝/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/08/09Java集合06-LinkedList详解(三)/" title=""></a></h2>
+                <p class="excerpt">
+                
+                
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-08T05:49:47.583Z" class="post-list__meta--date date">2017-03-08</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/08/09Java集合06-LinkedList详解(三)/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+            
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    <span class="footer__copyright">
+        基于 <a href="http://hexo.io">Hexo</a> 搭建，感谢 <a href="https://pages.github.com/">GitHub Pages</a> 提供免费的托管服务
+    </span>
+    <span class="footer__copyright">
+        &copy; 2017 - 本站由 <a href="/">@Monniya</a> 创建,
+        使用 <a href="https://github.com/monniya/hexo-theme-new-vno ">hexo-theme-new-vno</a> 主题,
+        修改自 <a href="https://github.com/lenbo-ma/hexo-theme-vno" target="_blank">Vno</a>, 原创出自<a href="http://github.com/onevcat/vno" target="_blank">onevcat</a>
+    </span>
+</footer>
+        </div>
+    </div>
+
+    
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+    
+    </script>
+    
+</body>
+</html>
