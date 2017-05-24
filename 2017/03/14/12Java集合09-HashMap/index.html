@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Little Piggy</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="Android">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Little Piggy">
+    <meta name="twitter:description" content="Android">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Little Piggy">
+    <meta property="og:description" content="Android">
+
+    
+    <meta name="author" content="Jerry">
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+    <link rel="alternate" type="application/rss+xml" title="Little Piggy" href="/atom.xml">
+    
+
+    <link rel="canonical" href="http://yoursite.com/2017/03/14/12Java集合09-HashMap/"/>
+
+    
+      
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Little Piggy 的主页"><img src="/images/avatar.jpg" width="80" alt="Little Piggy logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Little Piggy">Little Piggy</a></h1>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">Android</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+              <li class="navigation__item"><a href="/favourite">黄金屋</a></li>
+            
+              <li class="navigation__item"><a href="/favourite/time.html">时光机</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/monniya" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  <li class="navigation__item">
+    <a href="https://twitter.com/onlymonniya" title="上Twitter找我" target="_blank">
+      <i class='social fa fa-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+
+  
+
+  <li class="navigation__item">
+    <a href="/atom.xml" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2017-03-14T10:00:59.465Z" class="post-list__meta--date date">2017-03-14</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title"></h1>
+  </header>
+
+  <section class="post">
+    <h2 id="HashMap介绍"><a href="#HashMap介绍" class="headerlink" title="HashMap介绍"></a>HashMap介绍</h2><p><strong>注：本文依据android-25中的源码，可能和JDK中不太相同。</strong></p>
+<pre><code>public class HashMap&lt;K,V&gt;
+extends AbstractMap&lt;K,V&gt;
+implements Map&lt;K,V&gt;, Cloneable, Serializable
+</code></pre><p>HashMap是一个散列表，它存储的内容是键值对。</p>
+<p>HashMap继承于AbstractMap，实现了Map、Cloneable、java.io.Serializable接口。</p>
+<p>HashMap的实现是不同步的，这以为着它是线程不安全的。<strong>它的key、value都可以为null</strong>。此外，<strong>HashMap中的映射不是有序的</strong>。</p>
+<p>HashMap的实例有两个参数影响其性能：<strong>初始容量</strong>和<strong>加载因子</strong>。容量是哈希表中<strong>桶</strong>的数量，初始容量只是哈希表在创建时的容量。加载因子是哈希表在其容量自动增加之前可以达到多满的一种尺度。当哈希表中的条目超过了加载因子与当前容量的乘积时，则要对该哈希表进行rehash操作(即重建内部数据结构)，从而哈希表将具有大约两倍的桶数。</p>
+<p>通常，<strong>默认加载因子是0.75</strong>，这是在时间和空间成本上寻求一种折中。加载因子过高虽然减少了空间开销，但同时也增加了查询成本(在大多数HashMap类的操作中，包括get和put操作，都反映了这一点)。在设置初始容量时应该考虑到映射中所需的条目及其加载因子，以便最大限度地减少rehash操作次数。如果初始容量大于最大条目数除以加载因子，则不会发生rehash操作。</p>
+<p>HashMap实现了Map接口，既允许方法key为null的元素，也允许插入value为null的元素；除该类未实现同步外，其余跟Hashtable大致相同；跟TreeMap不同，该容器不保证元素顺序，根据需要该容器可能会对元素重新hash(rehash)，元素的顺序也会被重新打散，因此不同时间迭代同一个HashMap的顺序可能会不同。根据对冲突的处理方式不同，哈希表有两种实现方式，一种是开放地址方式(Open addressing)，另一种是冲突链表方式(Separate chaining with linked lists)。HashMap采用的是冲突链表的方式。</p>
+<h2 id="HashMap的构造函数"><a href="#HashMap的构造函数" class="headerlink" title="HashMap的构造函数"></a>HashMap的构造函数</h2><p>HashMap共有4个构造函数：</p>
+<pre><code>// 默认构造函数。
+HashMap()
+
+// 指定“容量大小”的构造函数
+HashMap(int capacity)
+
+// 指定“容量大小”和“加载因子”的构造函数
+HashMap(int capacity, float loadFactor)
+
+// 包含“子Map”的构造函数
+HashMap(Map&lt;? extends K, ? extends V&gt; map)
+</code></pre><h2 id="HashMap的API"><a href="#HashMap的API" class="headerlink" title="HashMap的API"></a>HashMap的API</h2><pre><code>void                 clear()
+Object               clone()
+boolean              containsKey(Object key)
+boolean              containsValue(Object value)
+Set&lt;Entry&lt;K, V&gt;&gt;     entrySet()
+V                    get(Object key)
+boolean              isEmpty()
+Set&lt;K&gt;               keySet()
+V                    put(K key, V value)
+void                 putAll(Map&lt;? extends K, ? extends V&gt; map)
+V                    remove(Object key)
+int                  size()
+Collection&lt;V&gt;        values()
+</code></pre><h1 id="HashMap数据结构"><a href="#HashMap数据结构" class="headerlink" title="HashMap数据结构"></a>HashMap数据结构</h1><h2 id="HashMap的继承关系"><a href="#HashMap的继承关系" class="headerlink" title="HashMap的继承关系"></a>HashMap的继承关系</h2><pre><code>java.lang.Object
+   ↳     java.util.AbstractMap&lt;K, V&gt;
+         ↳     java.util.HashMap&lt;K, V&gt;
+
+public class HashMap&lt;K,V&gt;
+    extends AbstractMap&lt;K,V&gt;
+    implements Map&lt;K,V&gt;, Cloneable, Serializable { }
+</code></pre><h2 id="HashMap与Map关系如下图"><a href="#HashMap与Map关系如下图" class="headerlink" title="HashMap与Map关系如下图"></a>HashMap与Map关系如下图</h2><p><img src="http://i.imgur.com/QiB0SVs.jpg" alt=""></p>
+<p>从图中可以看出：</p>
+<p>1、HashMap继承于AbstractMap，实现了Map接口。Map是键值对的接口，AbstractMap实现了键值对的通用函数接口。</p>
+<p>2、HashMap是通过<strong>拉链法</strong>实现的哈希表。它包括几个重要的成员变量：table、size、threshould、loadFactor、modCount。</p>
+<h3 id="table"><a href="#table" class="headerlink" title="table"></a>table</h3><pre><code>/**
+ * The table, resized as necessary. Length MUST Always be a power of two.
+ * 可以改变长度，长度必须是2^n
+ */
+transient HashMapEntry&lt;K,V&gt;[] table = (HashMapEntry&lt;K,V&gt;[]) EMPTY_TABLE;
+</code></pre><p>table是一个HashMapEntry[]类型的数组，而HashMapEntry实际上就是一个单链表。哈希表的键值对都是存储在HashMapEntry数组中的。</p>
+<p>看下HashMapEntry的源码：</p>
+<pre><code>static class HashMapEntry&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; {
+    final K key;    //键
+    V value;        //值
+    HashMapEntry&lt;K,V&gt; next;    //下一个Entry，可以看出是一个单链表结构
+    int hash;
+
+    /**
+     * Creates new entry.
+     */
+    HashMapEntry(int h, K k, V v, HashMapEntry&lt;K,V&gt; n) {
+        value = v;
+        next = n;
+        key = k;
+        hash = h;
+    }
+
+    //获取Entry里的key
+    public final K getKey() {
+        return key;
+    }
+
+    //获取Entry里的value
+    public final V getValue() {
+        return value;
+    }
+
+    //修改某个value，并返回oldValue
+    public final V setValue(V newValue) {
+        V oldValue = value;
+        value = newValue;
+        return oldValue;
+    }
+
+    public final boolean equals(Object o) {
+        if (!(o instanceof Map.Entry))
+            return false;
+        Map.Entry e = (Map.Entry)o;
+        Object k1 = getKey();
+        Object k2 = e.getKey();
+        if (k1 == k2 || (k1 != null &amp;&amp; k1.equals(k2))) {
+            Object v1 = getValue();
+            Object v2 = e.getValue();
+            if (v1 == v2 || (v1 != null &amp;&amp; v1.equals(v2)))
+                return true;
+        }
+        return false;
+    }
+
+    //Entry中很重要的方法，获取当前Entry对象的hash值
+    public final int hashCode() {
+        return Objects.hashCode(getKey()) ^ Objects.hashCode(getValue());
+    }
+
+    public final String toString() {
+        return getKey() + &quot;=&quot; + getValue();
+    }
+
+    /**
+     * This method is invoked whenever the value in an entry is
+     * overwritten by an invocation of put(k,v) for a key k that&apos;s already
+     * in the HashMap.
+     */
+    void recordAccess(HashMap&lt;K,V&gt; m) {
+    }
+
+    /**
+     * This method is invoked whenever the entry is
+     * removed from the table.
+     */
+    void recordRemoval(HashMap&lt;K,V&gt; m) {
+    }
+}
+</code></pre><h3 id="size"><a href="#size" class="headerlink" title="size"></a>size</h3><p>size是HashMap的大小，它是HashMap保存的键值对的数量</p>
+<pre><code>/**
+ * The number of key-value mappings contained in this map.
+ */
+transient int size;
+</code></pre><h3 id="threshold"><a href="#threshold" class="headerlink" title="threshold"></a>threshold</h3><p>threshold是HashMap的阀值，用于判断是否需要调整HashMap的容量。threshold的值=容量*加载因子，当HashMap中存储数据的数量达到threshold时，就需要将HashMap的容量加倍。</p>
+<pre><code>/**
+ * The next size value at which to resize (capacity * load factor).
+ * @serial
+ */
+// If table == EMPTY_TABLE then this is the initial capacity at which the
+// table will be created when inflated.
+int threshold;
+</code></pre><h3 id="loadFactor"><a href="#loadFactor" class="headerlink" title="loadFactor"></a>loadFactor</h3><p>loadFactor就是加载因子</p>
+<pre><code>/**
+ * The load factor for the hash table.
+ *
+ * @serial
+ */
+// Android-Note: We always use a load factor of 0.75 and ignore any explicitly
+// selected values.
+final float loadFactor = DEFAULT_LOAD_FACTOR;//0.75
+</code></pre><h3 id="modCount"><a href="#modCount" class="headerlink" title="modCount"></a>modCount</h3><p>modCount是用来实现fail-fast机制的。</p>
+<pre><code> /**
+ * The number of times this HashMap has been structurally modified
+ * Structural modifications are those that change the number of mappings in
+ * the HashMap or otherwise modify its internal structure (e.g.,
+ * rehash).  This field is used to make iterators on Collection-views of
+ * the HashMap fail-fast.  (See ConcurrentModificationException).
+ */
+transient int modCount;
+</code></pre><h1 id="HashMap工作原理"><a href="#HashMap工作原理" class="headerlink" title="HashMap工作原理"></a>HashMap工作原理</h1><p>通过hash的方法，通过put和get存储和获取对象。存储对象时，我们将K/V传给put方法时，它调用hashCode计算hash从而得到bucket位置，进一步存储，HashMap会根据当前bucket的占用情况自动调整容量(超过loadFactor则resize为原来的2倍)。获取对象时，我们将K传给get，它调用hashCode计算hash从而得到bucket位置，并进一步调用equals()方法确定键值对。如果发生碰撞的时候，HashMap通过链表将产生碰撞冲突的元素组织起来，在Java 8中，如果一个bucket中碰撞冲突的元素超过某个限制(默认是8)，则使用红黑树来替换链表，从而提高速度。</p>
+<p>以Entry[]数组实现的哈希桶数组，用Key的哈希值取模桶数组的大小可得到数组下标。</p>
+<pre><code>/**
+ * An empty table instance to share when the table is not inflated.
+ */
+static final HashMapEntry&lt;?,?&gt;[] EMPTY_TABLE = {};
+
+/**
+ * The table, resized as necessary. Length MUST Always be a power of two.
+ */
+transient HashMapEntry&lt;K,V&gt;[] table = (HashMapEntry&lt;K,V&gt;[]) EMPTY_TABLE;
+</code></pre><p><strong>基于Map接口实现；允许null键和null值；非同步；不保证有序(比如插入的顺序)；也不保证不随时间变化。HashMap存储着HashMapEntry(hash,key,value,next)对象。</strong></p>
+<p><strong>当key == null时，存在table[0]即第一个桶中，hash值为0</strong>。HashMap对key == null的键值对会做单独处理，譬如：</p>
+<pre><code>将key为null的键值对存到HashMap中
+
+/**
+ * Offloaded version of put for null keys
+ */
+private V putForNullKey(V value) {
+    //key为null的HashMapEntry被放在table[0]中，即第一个桶中，注意，该桶中还放有其他元素，比如，key的hash取模数组长度结果为0的键值对
+    for (HashMapEntry&lt;K,V&gt; e = table[0]; e != null; e = e.next) {
+        if (e.key == null) {
+            V oldValue = e.value;
+            e.value = value;
+            e.recordAccess(this);
+            return oldValue;
+        }
+    }
+    modCount++;
+    addEntry(0, null, value, 0);
+    return null;
+}
+
+
+取出key为null的键值对：
+
+private V getForNullKey() {
+    if (size == 0) {
+        return null;
+    }
+    //直接循环遍历第一个桶中的单链表
+    for (HashMapEntry&lt;K,V&gt; e = table[0]; e != null; e = e.next) {
+        if (e.key == null)
+            return e.value;
+    }
+    return null;
+}
+</code></pre><p>在HashMap中有两个很重要的参数，容量(Capacity)和负载因子(loadFactor)。</p>
+<p><strong>Capacity的默认值为4(Java中默认为16)：</strong></p>
+<pre><code>static final int DEFAULT_INITIAL_CAPACITY = 4;
+</code></pre><p><strong>负载因子的默认值为0.75</strong></p>
+<pre><code>static final float DEFAULT_LOAD_FACTOR = 0.75f;
+</code></pre><p>简单的说，Capacity就是bucket的大小，loadFactor就是bucket填满程度的最大比例。如果对迭代性能要求很高的话不要把loadFactor设置过大，也不要把loadFactor设置过小。当bucket中的entries的数目大于capacity*loadFactor时就需要调整bucket的大小为当前的2倍。</p>
+<p>可以设置初始容量Capacity，但是在HashMap处理过程中，是会把Capacity扩充成2的倍数，怎么理解？比如你设置的初始值为17，但是17不是2的整数倍，会扩容成32，再比如你初始值设置的是15，会扩容成16，具体的实现在下面：</p>
+<pre><code>private static int roundUpToPowerOf2(int number) {
+    // assert number &gt;= 0 : &quot;number must be non-negative&quot;;
+    int rounded = number &gt;= MAXIMUM_CAPACITY
+            ? MAXIMUM_CAPACITY
+            : (rounded = Integer.highestOneBit(number)) != 0
+                ? (Integer.bitCount(number) &gt; 1) ? rounded &lt;&lt; 1 : rounded
+                : 1;
+
+    return rounded;
+}
+</code></pre><p>该方法虽然只有一行代码，但是很复杂，一点一点来分析一下：</p>
+<p>首先要弄明白一点，该方法在什么时候被调用的？</p>
+<p>如果要看该方法的调用栈，就需要从HashMap的构造方法说起了：</p>
+<p>HashMap有四个构造函数，具体的看一下：</p>
+<pre><code>public HashMap(int initialCapacity, float loadFactor) {
+    if (initialCapacity &lt; 0)
+        throw new IllegalArgumentException(&quot;Illegal initial capacity: &quot; +
+                                           initialCapacity);
+    if (initialCapacity &gt; MAXIMUM_CAPACITY) {
+        initialCapacity = MAXIMUM_CAPACITY;
+    } else if (initialCapacity &lt; DEFAULT_INITIAL_CAPACITY) {
+        initialCapacity = DEFAULT_INITIAL_CAPACITY;
+    }
+
+    if (loadFactor &lt;= 0 || Float.isNaN(loadFactor))
+        throw new IllegalArgumentException(&quot;Illegal load factor: &quot; +
+                                           loadFactor);
+    // Android-Note: We always use the default load factor of 0.75f.
+
+    // This might appear wrong but it&apos;s just awkward design. We always call
+    // inflateTable() when table == EMPTY_TABLE. That method will take &quot;threshold&quot;
+    // to mean &quot;capacity&quot; and then replace it with the real threshold (i.e, multiplied with
+    // the load factor).
+    //看上面的注释，注意：这里直接将initialCapacity赋值给threshold阈值
+    threshold = initialCapacity;
+    init();
+}
+
+//该构造方法直接使用默认的加载因子去调用两参的构造方法
+public HashMap(int initialCapacity) {
+    this(initialCapacity, DEFAULT_LOAD_FACTOR);
+}
+
+//该构造方法直接使用默认的容量和默认的加载因子去调用两参的构造方法
+public HashMap() {
+    this(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);
+}
+
+
+//该构造方法接收一个Map，也是先调用两参的构造方法，然后直接去调用inflateTable(threshold)
+//注意，在调用了两参的构造方法之后，threshold已经有值了
+//然后调用putAllForCreate方法将m中的元素全部添加到新的HashMap中
+public HashMap(Map&lt;? extends K, ? extends V&gt; m) {
+    this(Math.max((int) (m.size() / DEFAULT_LOAD_FACTOR) + 1,
+                  DEFAULT_INITIAL_CAPACITY), DEFAULT_LOAD_FACTOR);
+    inflateTable(threshold);
+
+    putAllForCreate(m);
+}
+</code></pre><p>构造方法执行完毕之后，貌似存放HashMapEntry的table数组还是指向一个空数组，即初始化时的状态：</p>
+<pre><code>transient HashMapEntry&lt;K,V&gt;[] table = (HashMapEntry&lt;K,V&gt;[]) EMPTY_TABLE;
+</code></pre><p>而且threshold的值此时等于HashMap的容量，这个时候还不能算出threshold的值，因为数组的容量还没有确定呢，数组的容量要根据两参构造方法中接收到的initialCapacity进行计算算出来的(要获取大于该值的最小的2^n的数)。数组的容量没有确定，数组就没办法去new(因为new一个数组需要先知道该数组的长度)，同样也没办法计算出threshold应赋予的值。</p>
+<p>那么为什么不在构造方法中计算出数组的容量、初始化数组，并计算出threshold的值呢？</p>
+<p>答案是效率和性能。</p>
+<p>因为如果你创建一个Map，并且在创建该HashMap的时候就已经在内存中new出了一个空数组，如果你长时间不往里面添加任何元素的话，那么这个空数组就一直在占用内存。所以为了榨取这一点点性能，大婶们真是绞尽脑汁啊。在我们put一个元素的时候再计算出数组应有的容量、初始化数组、计算出threshold阈值。我只想说一句：我靠！</p>
+<p>好，那就看put方法咯！</p>
+<pre><code>public V put(K key, V value) {
+    if (table == EMPTY_TABLE) {
+        inflateTable(threshold);
+    }
+    if (key == null)
+        return putForNullKey(value);
+    int hash = sun.misc.Hashing.singleWordWangJenkinsHash(key);
+    int i = indexFor(hash, table.length);
+    for (HashMapEntry&lt;K,V&gt; e = table[i]; e != null; e = e.next) {
+        Object k;
+        if (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k))) {
+            V oldValue = e.value;
+            e.value = value;
+            e.recordAccess(this);
+            return oldValue;
+        }
+    }
+
+    modCount++;
+    addEntry(hash, key, value, i);
+    return null;
+}
+</code></pre><p>put方法上来就判断table是否还是空数组，如果我们调用HashMap的构造方法(除去HashMap(Map&lt;? extends K, ? extends V&gt; m)这个构造方法，这个构造方法内部就调用inflateTable方法填充数组了)，并没有往里添加任何一个元素的时候，这个时候的table肯定还是EMPTY_TABLE，所以就会去调用inflateTable(threshold)并将那个虚假的threshold(此时等于我们期望的map的容量)传递进去：</p>
+<pre><code>/**
+ * Inflates the table.
+ */
+private void inflateTable(int toSize) {
+    // Find a power of 2 &gt;= toSize
+    int capacity = roundUpToPowerOf2(toSize);
+
+    // Android-changed: Replace usage of Math.min() here because this method is
+    // called from the &lt;clinit&gt; of runtime, at which point the native libraries
+    // needed by Float.* might not be loaded.
+    float thresholdFloat = capacity * loadFactor;
+    if (thresholdFloat &gt; MAXIMUM_CAPACITY + 1) {
+        thresholdFloat = MAXIMUM_CAPACITY + 1;
+    }
+
+    threshold = (int) thresholdFloat;
+    table = new HashMapEntry[capacity];
+}
+</code></pre><p>该方法中通过调用roundUpToPowerOf2去计算出数组应改占有的容量，计算出capacity之后，就可以通过capacity*loadFactor去计算出真实的threshold了，并且可以new HashMapEntry的数组了。</p>
+<p>接下来就该分析roundUpToPowerOf2方法了：</p>
+<p>我们知道了调用栈，就应该知道该方法接收的number就是我们期望的Map的容量，也就是构造方法中的initialCapacity。</p>
+<p>1、如果number &gt;= MAXIMUM_CAPACITY，那么rounded就取MAXIMUM_CAPACITY，因为HashMap中的table的长度不能超过MAXIMUM_CAPACITY(2^30)</p>
+<p>2、如果number &lt; MAXIMUM_CAPACITY，一般情况下都是如此(没有谁上来就创建一个容量为2^30的map)，就会执行下面的代码：</p>
+<pre><code>rounded = (rounded = Integer.highestOneBit(number)) != 0
+                ? (Integer.bitCount(number) &gt; 1) ? rounded &lt;&lt; 1 : rounded
+                : 1
+</code></pre><p>3、先将rounded赋值为Integer.highestOneBit(number),先看看highestOneBit方法：</p>
+<pre><code>public static int highestOneBit(int i) {
+    // HD, Figure 3-1
+    i |= (i &gt;&gt;  1);
+    i |= (i &gt;&gt;  2);
+    i |= (i &gt;&gt;  4);
+    i |= (i &gt;&gt;  8);
+    i |= (i &gt;&gt; 16);
+    //以上5步所做的操作就是将i的二进制从最高位到最低位上的值都变成1
+    //如果i传递过来的时候等于88，二进制是0101 1000,执行完上面五步之后就变成 0111 1111(从最高位开始往右都是1)
+
+    //下面这步的操作就是将最高位之外的所有位都变成0，如上面的0111 1111执行完之后就变成 0100 0000
+    return i - (i &gt;&gt;&gt; 1);
+}
+</code></pre><p>上面这个方法的目的就是取一个二进制的最高位，得到的结果就是小于等于原值的最大的2^n。88调用完该方法之后得到的值就是64.</p>
+<p>4、如果rounded == 0，说明number也是0，就直接返回1，此时Map的容量就是1.</p>
+<p>5、如果rounded ！= 0，就执行下面的代码：</p>
+<pre><code>rounded = (Integer.bitCount(number) &gt; 1) ? rounded &lt;&lt; 1 : rounded
+</code></pre><p>如果Integer.bitCount(number) &gt; 1，rounded就 = rounded &lt;&lt; 1，否则rounded还是取原值。</p>
+<p>再看看bitCount方法：</p>
+<pre><code>public static int bitCount(int i) {
+    // HD, Figure 5-2
+    i = i - ((i &gt;&gt;&gt; 1) &amp; 0x55555555);
+    i = (i &amp; 0x33333333) + ((i &gt;&gt;&gt; 2) &amp; 0x33333333);
+    i = (i + (i &gt;&gt;&gt; 4)) &amp; 0x0f0f0f0f;
+    i = i + (i &gt;&gt;&gt; 8);
+    i = i + (i &gt;&gt;&gt; 16);
+    return i &amp; 0x3f;
+}
+</code></pre><p>智商有限，只知道该方法获取二进制数中位数为1的个数，0111 1101就返回6.</p>
+<p>如果bitCount(number)返回值为1，就说明number正好是2^n，如果number为2^n，那么highestOneBit(number)的返回值也是number，执行完highestOneBit(number)时rounded的值就等于number，执行完bitCount(nubmer)后rounded也等于number。</p>
+<p>如果bitCount(number)返回值&gt;1,就说明number不是2^n,执行完highestOntBit(number)后，rounded是小于number的最大的2^n,我们要创建的map的容量肯定要大于等于我们在构造方法传递的initialCapacity，所以就将rounded &lt;&lt; 1，并返回。</p>
+<p>上面的代码如果看懂了，再看put方法剩余的代码和方法调用栈应该没问题了。。。</p>
+<h2 id="modCount来实现fail-fast机制"><a href="#modCount来实现fail-fast机制" class="headerlink" title="modCount来实现fail-fast机制"></a>modCount来实现fail-fast机制</h2><p>HashMap中有一个成员变量modCount，这个用来实现“fail-fast”机制(也就是快速失败)。所谓快速失败就是在并发集合中，其进行迭代操作时，若有其他线程对其结构性的修改，这时迭代器会立马感知到，并且立刻抛出ConcurrentModificationException异常，而不是等迭代完成之后才告诉你已经出错了。原理和ArrayList、LinkedList相同。</p>
+<h2 id="HashMap的遍历"><a href="#HashMap的遍历" class="headerlink" title="HashMap的遍历"></a>HashMap的遍历</h2><p>遍历方式有好几种，很简单，不再赘述，参考<a href="http://blog.csdn.net/u013256816/article/details/50295009" target="_blank" rel="external">Java中如何遍历Map对象</a></p>
+<h2 id="HashMap结构"><a href="#HashMap结构" class="headerlink" title="HashMap结构"></a>HashMap结构</h2><p><img src="http://i.imgur.com/Qed7tPU.png" alt=""></p>
+<p>将对象放入到HashMap中时，有两个方法需要特别关心：<code>hashCode()</code>和<code>equals()</code>。<code>hashCode()</code>方法决定了对象会被放到哪个<code>bucket</code>里，当多个对象的哈希值冲突时，<code>equals()</code>方法决定了这些哈希值冲突的对象是否是”同一个对象”。所以，如果要将自定义的对象放入到<code>HashMap</code>中，需要Override <code>hashCode()</code>和<code>equals()</code>方法。</p>
+<h2 id="HashMap-get-key"><a href="#HashMap-get-key" class="headerlink" title="HashMap get(key)"></a>HashMap get(key)</h2><p><code>get(Object key)</code>方法根据指定的<code>key</code>值返回对应的<code>value</code>，该方法调用了<code>getEntry(Object key)</code>得到相应的<code>entry</code>，然后返回<code>entry.getValue()</code>。因此<code>getEntry()</code>是算法的核心。算法思想是首先通过<code>hash()</code>函数得到对应<code>bucket</code>的下标，然后依次遍历冲突链表，通过<code>key.equals(k)</code>方法来判断是否是要找的那个<code>entry</code>。</p>
+<p><img src="http://i.imgur.com/ZpYozjB.png" alt=""></p>
+<p>get的大致思路：</p>
+<p>1、判断key值是否为null，如果是则进行特殊处理，调用getForNullKey，在0号bucket(即table[0])的链表中查找</p>
+<p>2、如果key值不是null，则计算key的hash值，进而计算出其在table中的index值</p>
+<p>3、在table[index]的链表中查找，根据hash值和equals方法获得相应的value。</p>
+<pre><code>public V get(Object key) {
+    if (key == null)
+        //如果key是null，调用getForNullKey去查找
+        return getForNullKey();
+    //否则，调用getEntry方法去查找
+    Entry&lt;K,V&gt; entry = getEntry(key);
+
+    return null == entry ? null : entry.getValue();
+}
+
+//查找key为null的Entry
+private V getForNullKey() {
+    if (size == 0) {
+        return null;
+    }
+    //遍历table[0]处的链表查找key为null的Entry
+    for (HashMapEntry&lt;K,V&gt; e = table[0]; e != null; e = e.next) {
+        if (e.key == null)
+            return e.value;
+    }
+    return null;
+}
+
+//否则，如果key不为null，调用getEntry方法去查找：
+
+final Entry&lt;K,V&gt; getEntry(Object key) {
+    if (size == 0) {
+        return null;
+    }
+    //根据key计算出hash
+    int hash = (key == null) ? 0 : sun.misc.Hashing.singleWordWangJenkinsHash(key);
+
+    //根据hash计算出index(用hash取模于table.length),并在相应的table[index]处的链表中遍历查找
+    for (HashMapEntry&lt;K,V&gt; e = table[indexFor(hash, table.length)];
+         e != null;
+         e = e.next) {
+        Object k;
+        //先判断hash是否相等，然后判断地址值是否相等或者equals方法是否返回true
+        if (e.hash == hash &amp;&amp;
+            ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
+            return e;
+    }
+    return null;
+}
+</code></pre><h2 id="HashMap-put-K-key-V-value"><a href="#HashMap-put-K-key-V-value" class="headerlink" title="HashMap put(K key,V value)"></a>HashMap put(K key,V value)</h2><p><code>put(K key,V value)</code>方法是将指定的<code>key,value</code>对添加到<code>map</code>里。该方法首先会对<code>map</code>做一次查找，看是否包含该元素组，如果已经包含则直接用新value替换旧value，并返回旧value，查找过程类似于<code>getEntry()</code>方法；如果没有找到，则会通过<code>addEntry(int hash, K key, V value, int bucketIndex)</code>方法插入新的<code>entry</code>，插入方式为<strong>头插法</strong>。</p>
+<p><img src="http://i.imgur.com/MYEABWu.png" alt=""></p>
+<p>put函数大致的思路为：</p>
+<p>1、先判断table(存放bucket的数组，初始类定义：<code>transient HashMapEntry&lt;K,V&gt;[] table = (HashMapEntry&lt;K,V&gt;[]) EMPTY_TABLE;</code>)是否为空，如果为空则inflate table，其中包括确保table的大小为2的n次幂。</p>
+<p>2、如果key为null，则特殊处理，调用putForNullKey(V key)，hash值为0，存入table中。</p>
+<p>3、如果key不为null，则计算key的hash值。</p>
+<p>4、然后根据key的hash计算该键值对应该在table中bucket的索引index。</p>
+<p>5、遍历table[index]的链表，如果发现链表中有HashMapEntry的键的hash值与key的hash值相等，就调用其equals方法判断是否equals，如果equals也返回true，说明已经存在相同的key，则替换掉旧值(oldValue)，将新值(newVlaue)插入，并返回oldValue；保证key的唯一性</p>
+<p>6、如果没有存在相同的key，在插入之前先判断table中阈值的大小，如果table中的HashMapEntry的个数size超过阈值(threshold)则扩容(resize)两倍；注意扩容的顺序，扩容之前如果某个bucket中链表的顺序是old1 -&gt; old2 -&gt; old3，扩容之后如果这几个元素的hash对新table的length取模之后的结果还一样的话(有可能不一样)，相应bucket中的链表顺序是old3 -&gt; old2 -&gt; old1。</p>
+<p>7、插入新的bucket。注意插入的顺序，原先table[index]的链表比如old1 -&gt; old2 -&gt; old3,插入新值之后位new -&gt; old1 -&gt; old2 -&gt; old3。</p>
+<pre><code>public V put(K key, V value) {
+    if (table == EMPTY_TABLE) {
+        inflateTable(threshold);
+    }
+    if (key == null)
+        return putForNullKey(value);
+    int hash = sun.misc.Hashing.singleWordWangJenkinsHash(key);
+    int i = indexFor(hash, table.length);
+    for (HashMapEntry&lt;K,V&gt; e = table[i]; e != null; e = e.next) {
+        Object k;
+        if (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k))) {
+            V oldValue = e.value;
+            e.value = value;
+            e.recordAccess(this);
+            return oldValue;
+        }
+    }
+
+    modCount++;
+    //如果Map中不存在相同的key，就会走到这一步，调用addEntry方法
+    addEntry(hash, key, value, i);
+    return null;
+}
+
+void addEntry(int hash, K key, V value, int bucketIndex) {
+    //先判断是否需要扩容
+    if ((size &gt;= threshold) &amp;&amp; (null != table[bucketIndex])) {
+        resize(2 * table.length);
+        hash = (null != key) ? sun.misc.Hashing.singleWordWangJenkinsHash(key) : 0;
+        bucketIndex = indexFor(hash, table.length);
+    }
+    //是否扩容的逻辑走完，会调用createEntry，使用key和value创建新的Entry并插入
+    createEntry(hash, key, value, bucketIndex);
+}
+
+void createEntry(int hash, K key, V value, int bucketIndex) {
+    //先获取原先在bucket上的HashMapEntry
+    HashMapEntry&lt;K,V&gt; e = table[bucketIndex];
+    //注意插入顺序，bucketIndex处的值换成新的Entry，新的Entry的next是原先的Entry e
+    table[bucketIndex] = new HashMapEntry&lt;&gt;(hash, key, value, e);
+    size++;
+}
+</code></pre><p>上面createEntry方法包含了一个非常优雅的设计：总是将新添加的Entry对象放入table数组的bucketIndex索引处—-如果bucketIndex索处已经有了一个Entry对象，那新添加的Entry对象指向原有的Entry对象(产生一个Entry链)，如果bucketIndex索引处没有Entry对象，上面的e变量是null，也就是新放入的Entry对象指向null，也就是Entry内部类中的next属性为null，也就是没有产生Entry链。</p>
+<p>HashMap的扩容方法：</p>
+<pre><code>void resize(int newCapacity) {
+    HashMapEntry[] oldTable = table;
+    int oldCapacity = oldTable.length;
+    if (oldCapacity == MAXIMUM_CAPACITY) {
+        threshold = Integer.MAX_VALUE;
+        return;
+    }
+
+    HashMapEntry[] newTable = new HashMapEntry[newCapacity];
+    transfer(newTable);
+    table = newTable;
+    threshold = (int)Math.min(newCapacity * loadFactor, MAXIMUM_CAPACITY + 1);
+}
+</code></pre><p>resize方法没什么好说的，将使用newCapacity创建一个新的HashMapEntry数组，然后调用transfer方法：</p>
+<pre><code>void transfer(HashMapEntry[] newTable) {
+    int newCapacity = newTable.length;
+    //下面使用两层循环去将原table中的数据移到新table中
+    //for循环的是table
+    for (HashMapEntry&lt;K,V&gt; e : table) {
+        //while循环的是每个table[i]中的链表
+        while(null != e) {
+            HashMapEntry&lt;K,V&gt; next = e.next;
+            //根据e的hash去计算出相应的index
+            int i = indexFor(e.hash, newCapacity);
+            e.next = newTable[i];
+            newTable[i] = e;
+            e = next;
+        }
+    }
+}
+</code></pre><p>注：在jdk 8中，新增默认为8的链表阈值(TREEIFY_THRESHOLD)，当一个桶里的Entry超过该阈值，就不以单向链表而以红黑树来存放，以加快key的查找速度。</p>
+<h2 id="HashMap-remove-Object-key"><a href="#HashMap-remove-Object-key" class="headerlink" title="HashMap remove(Object key)"></a>HashMap remove(Object key)</h2><p><code>remove(Object key)</code>的作用是删除<code>key</code>值对应的<code>entry</code>，该方法的具体逻辑是在<code>removeEntryForKey(Object key)</code>里实现的。<code>removeEntryForKey()</code>方法会首先找到<code>key</code>值对应的<code>entry</code>，然后删除该<code>entry</code>(修改链表的相应引用)。查找过程跟<code>getEntry()</code>过程类似。</p>
+<p><img src="http://i.imgur.com/JyTxAns.png" alt=""></p>
+<pre><code>public V remove(Object key) {
+    Entry&lt;K,V&gt; e = removeEntryForKey(key);
+    return (e == null ? null : e.getValue());
+}
+
+final Entry&lt;K,V&gt; removeEntryForKey(Object key) {
+    if (size == 0) {
+        return null;
+    }
+    //先找到key对应的hash
+    int hash = (key == null) ? 0 : sun.misc.Hashing.singleWordWangJenkinsHash(key);
+    //根据hash计算出在bucket的index
+    int i = indexFor(hash, table.length);
+    //记录该bucket上的第一个元素
+    HashMapEntry&lt;K,V&gt; prev = table[i];
+    HashMapEntry&lt;K,V&gt; e = prev;
+
+    //如果该bucket上有元素，就开始遍历该冲突链表
+    while (e != null) {
+        HashMapEntry&lt;K,V&gt; next = e.next;
+        Object k;
+        if (e.hash == hash &amp;&amp;
+            ((k = e.key) == key || (key != null &amp;&amp; key.equals(k)))) {
+            modCount++;
+            size--;
+            if (prev == e)    //prev == e，只有第一次循环的时候有可能相等，自己画个图想想就知道了
+                table[i] = next;
+            else
+                prev.next = next;
+            e.recordRemoval(this);
+            return e;
+        }
+        prev = e;
+        e = next;
+    }
+
+    return e;
+}
+</code></pre><h2 id="使用自定义的对象作为键"><a href="#使用自定义的对象作为键" class="headerlink" title="使用自定义的对象作为键"></a>使用自定义的对象作为键</h2><p>可以使用任何对象作为键，只要它遵守了equals()和hashCode()方法的定义规则，并且当对象插入到Map中之后将不会再改变了。</p>
+<pre><code>public class StringOther
+{
+    private String name;
+
+    public StringOther(String name)
+    {
+        this.name = name;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj == this)
+            return true;
+        if(!(obj instanceof StringOther))
+            return false;
+        StringOther so = (StringOther)obj;
+        return so.getName().equals(name);
+    }
+
+    public String getName()
+    {
+        return this.name;
+    }
+
+    @Override
+    public String toString()
+    {
+        return &quot;[&quot;+this.name+&quot;:&quot;+this.hashCode()+&quot;]&quot;;
+    }
+}
+</code></pre><p>测试代码：</p>
+<pre><code>Map&lt;StringOther,String&gt; maps = new HashMap&lt;&gt;(16);
+ StringOther so1 = new StringOther(&quot;so1&quot;);
+ StringOther so2 = new StringOther(&quot;so2&quot;);
+ maps.put(so1,&quot;1&quot;);
+ maps.put(so2,&quot;2&quot;);
+
+ System.out.println(maps);
+</code></pre><p>输出结果：</p>
+<pre><code>{[so1:114005]=1, [so2:114006]=2}
+</code></pre><p>注意重写equals方法的时候一定要写成：</p>
+<pre><code>@Override public boolean equals(Object obj)
+</code></pre><p>的形式，<strong>注意注解@Override和参数类型Object obj</strong>，如果写成@Override public boolean equals(StringOther obj)这样会出现意想不到的错误。</p>
+<p><strong>并且在每个覆盖了equals方法的类中也必须覆盖hashCode方法</strong></p>
+<h1 id="HashMap的序列化"><a href="#HashMap的序列化" class="headerlink" title="HashMap的序列化"></a>HashMap的序列化</h1><p>HashMap实现了Serializable接口，但是成员变量table的定义是：<code>transient HashMapEntry&lt;K,V&gt;[] table = (HashMapEntry&lt;K,V&gt;[]) EMPTY_TABLE;</code>却是<code>transient</code>的。然后又自己实现了writeObject()和readObject()方法。</p>
+<p>我们知道，声明为transient的变量不再是对象持久化的一部分，当对象被序列化、反序列化之后得到的对象中被transient修饰的变量的值都是默认值，如int型是0，对象型是null。</p>
+<p>那么这是为什么呢？原因有两点，和ArrayList的序列化相似：</p>
+<p>1、HashMap的put和get基于hashCode的实现，而hashCode是native方法，对每一个不同的java环境来说，同一个key所计算的hashCode是不相同的，所以反序列化后的table的index会发生变化，无法还原。</p>
+<p>2、HashMap默认size到达阈值threshold之后进行扩容，很明显HashMap不可能保证每一个bucket都有数据，很多都为null，如果对这部分数据进行序列化则造成不必要的资源浪费。</p>
+<h1 id="与Hashtable的区别"><a href="#与Hashtable的区别" class="headerlink" title="与Hashtable的区别"></a>与Hashtable的区别</h1><p>HashMap和Hashtable都实现了Map接口，但决定用哪一个之前先要弄清楚它们之间的区别：</p>
+<p>1、HashMap几乎可以等价于Hashtable，除了HashMa是非synchronize的，并可以接受null(HashMap可以接受为null的键和值)，而Hashtable的key和value都不能为null，，否则会报NullPointException</p>
+<p>2、HashMap是非synchronized，而Hashtable是synchronized，这意味着Hashtable是线程安全的，多个线程可以共享一个Hashtable；而如果没有正确的同步的话，多个线程是不能共享HashMap的。Java 5提供了ConcurrentHashMap，它是Hashtable的替代，比Hashtable的扩展性更好。</p>
+<p>3、另一个区别是HashMap的迭代器(Iterator)是fail-fast迭代器，而Hashtable的enumerator迭代器不是fail-fast的。所以当有其他线程改变了HashMap的结构(增加或者移除元素)，将会抛出ConcurrentModificationException，但迭代器本身的remove()方法移除元素则不会抛出ConcurrentModificationException异常。但这并不是一个一定发生的行为，要看JVM。</p>
+<p>4、由于Hashtable是线程安全的也是synchronized，所以在单线程环境下它比HashMap要慢。如果你不需要同步，只需要单一线程，那么使用HashMap性能要好过Hashtable。</p>
+<p>5、HashMap不能保证随着时间的推移Map中的元素次序是不变的。</p>
+<p>HashMap可以通过下面的语句进行同步：Map m=Collections.synchronizeMap(hashMap);Hashtable和HashMap有几个主要的不同：线程安全以及速度。尽在你需要完全的线程安全的时候使用Hashtable，而如果你使用Java 5或以上的话，请使用ConcurrentHashMap吧。</p>
+<h1 id="HashMap常见问题总结"><a href="#HashMap常见问题总结" class="headerlink" title="HashMap常见问题总结"></a>HashMap常见问题总结</h1><p>1、你知道get和put的原理吗？equals()和hashCode()都有什么作用？</p>
+<p>通过key的hashCode进行hashing，并计算下标(通过hash取模于table的长度)，从而获得bucket的位置。如果产生碰撞，则利用key.equals()方法去链表或树中查找对应的节点。</p>
+<p>2、为什么String和Integer、Float这样的wrapper类适合作为键？</p>
+<p>String和Integer、Float这样的wrapper类作为HashMap的键是再合适不过了，而且String最为常用。因为String是不可变的，也是final的，而且已经重写了equals()和hashCode()方法了。其他的wrapper类也有这个特点。不可变性是必要的，因为为了要计算hashCode()，就要防止键值改变，如果键值在放入时和获取时返回不同的hashcode的话，那么就不能从HashMap中找到你想要的对象。不可变性还有其他的优点如线程安全。如果你可以仅仅通过将某个field声明成final就能保证hashCode是不变的，那么请这么做吧。因为获取对象的时候要用到equals()和hashCode()方法，那么键对象正确的重写这两个方法是非常重要的。如果两个不相等的对象返回不同的hashcode的话，那么碰撞的几率就会小些，这样就能提高HashMap的性能。</p>
+<p>3、HashMap中table的长度为什么一定是2^n？</p>
+<p>桶数组的长度始终是2的整数次方（大于等于指定的初始容量），这样做可以减少冲突概率，提高查找效率。（可以从indexfor函数中看出，h&amp;(length-1),若length为奇数，length-1为偶数那么h&amp;(length-1)结果的最后一位必然为0，也就是说所有键都被散列到数组的偶数下标位置,这样会浪费近一半空间。另外，length为2的整数次方也保证了h&amp;(length-1)与h%length等效）.</p>
+<h2 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h2><p>桶：对于HashMap及其子类而言，他们采用Hash算法来决定集合中元素的存储位置。当开始初始化HashMap时，会创建一个长度为capacity的HashMapEntry数组，这个数组里可以存储元素的位置被称为“桶(bucket)”，每个bucket都有其指定索引，系统可以根据其索引快速访问该bucket里存储的元素。</p>
+
+  </section>
+
+</article>
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/15/13Java集合10-LinkedHashMap/" title=""></a></h2>
+                <p class="excerpt">
+                
+                LinkedHashMap总体介绍public class LinkedHashMap&amp;lt;K,V&amp;gt;
+    extends HashMap&amp;lt;K,V&amp;gt;
+    implements Map&amp;lt;K,V&amp;gt;
+LinkedHashMap实现了Map接口，继承了HashMap，既
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-15T08:22:14.225Z" class="post-list__meta--date date">2017-03-15</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/15/13Java集合10-LinkedHashMap/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/14/11Java集合08-Map/" title=""></a></h2>
+                <p class="excerpt">
+                
+                概要因为Set的实现类都是基于Map来实现的(如，HashSet是通过HashMap实现的，TreeSet是通过TreeMap实现的)，所以先学Map。
+首先，看看Map架构：
+
+1、Map是映射接口，Map中存储的内容都是键值对(key-value)
+2、AbstractMap是继承于Map的抽象
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-14T08:35:39.094Z" class="post-list__meta--date date">2017-03-14</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/14/11Java集合08-Map/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+            
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    <span class="footer__copyright">
+        基于 <a href="http://hexo.io">Hexo</a> 搭建，感谢 <a href="https://pages.github.com/">GitHub Pages</a> 提供免费的托管服务
+    </span>
+    <span class="footer__copyright">
+        &copy; 2017 - 本站由 <a href="/">@Monniya</a> 创建,
+        使用 <a href="https://github.com/monniya/hexo-theme-new-vno ">hexo-theme-new-vno</a> 主题,
+        修改自 <a href="https://github.com/lenbo-ma/hexo-theme-vno" target="_blank">Vno</a>, 原创出自<a href="http://github.com/onevcat/vno" target="_blank">onevcat</a>
+    </span>
+</footer>
+        </div>
+    </div>
+
+    
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+    
+    </script>
+    
+</body>
+</html>

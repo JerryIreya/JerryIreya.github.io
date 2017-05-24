@@ -37,7 +37,7 @@
     <link rel="alternate" type="application/rss+xml" title="Little Piggy" href="/atom.xml">
     
 
-    <link rel="canonical" href="http://yoursite.com/2017/03/13/算法--求二进制数中1的个数/"/>
+    <link rel="canonical" href="http://yoursite.com/2017/03/21/16Java集合ConcurrentHashMap/"/>
 
     
       
@@ -143,7 +143,7 @@
 
   <header class="post-header">
     <div class="post-meta">
-      <time datetime="2017-03-13T07:29:49.102Z" class="post-list__meta--date date">2017-03-13</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <time datetime="2017-03-21T05:26:33.034Z" class="post-list__meta--date date">2017-03-21</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
       <span class="page-pv">
       &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
       </span> 
@@ -153,7 +153,12 @@
   </header>
 
   <section class="post">
-    <p><a href="http://www.cnblogs.com/graphics/archive/2010/06/21/1752421.html#!comments" target="_blank" rel="external">算法，求二进制数中1的个数</a></p>
+    <h1 id="ConcurrentHashMap的实现原理"><a href="#ConcurrentHashMap的实现原理" class="headerlink" title="ConcurrentHashMap的实现原理"></a>ConcurrentHashMap的实现原理</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>我们之前了解到关于HashMap和Hashtable这两种集合。其中HashMap是非线程安全的，当我们只有一个线程在使用HashMap的时候，自然不会有问题，但如果涉及到多个线程，并且有读有写的过程中，HashMap就不能满足我们的需要了(fail-fast)。在不考虑性能问题的时候，我们的解决方案有Hashtable或者Collections.synchronizedMap(hashMap)，这两种方式基本都是对整个hash表结构做锁定操作的，这样在锁表的期间，别的线程就需要等待了，无疑性能不高。</p>
+<p>ConcurrentHashMap是java.util.concurrent包的重要成员，支持高并发操作，在多线程情况下可以用来替代HashMap或LinkedHashMap。</p>
+<p>ConcurrentHashMap的实现是依赖于Java内存模型，所以我们在了解ConcurrentHashMap的前提是必须了解Java内存模型。</p>
+<p><a href="https://ynwang-9949.gitbooks.io/android/Part2/JVM/JVM.html" target="_blank" rel="external">Java内存模型</a></p>
+<h2 id="ConcurrentHashMap分析"><a href="#ConcurrentHashMap分析" class="headerlink" title="ConcurrentHashMap分析"></a>ConcurrentHashMap分析</h2><p>ConcurrentHashMap的结构是比较复杂的，深究其本质，其实也就是数组和链表而已。我们由浅入深慢慢的分析其结构。</p>
+<p>先简单分析一下，ConcurrentHashMap的成员变量中，包含了一个Segment的数组</p>
 
   </section>
 
@@ -164,15 +169,18 @@
                
             <div class="read-more-item">
                 <span class="read-more-item-dim">最近的文章</span>
-                <h2 class="post-list__post-title post-title"><a href="/2017/03/13/DesignPatternModel01-Prototype Pattern/" title=""></a></h2>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/23/Handler和内部类引起的内存泄漏/" title=""></a></h2>
                 <p class="excerpt">
                 
-                原型模式-Prototype Pattern原型模式属于对象的创建模式。使用原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。
+                Handler和内部类怎么引起内存泄漏？先看下面一段代码：
+public class SampleActivity extends Activity {
 
-
+  private final Handler mLeakyHandler = new Handler() {
+    @Override
+  
                 &hellip;
                 </p>
-                <div class="post-list__meta"><time datetime="2017-03-13T09:38:38.919Z" class="post-list__meta--date date">2017-03-13</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/13/DesignPatternModel01-Prototype Pattern/">继续阅读</a></div>
+                <div class="post-list__meta"><time datetime="2017-03-23T02:58:39.191Z" class="post-list__meta--date date">2017-03-22</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/23/Handler和内部类引起的内存泄漏/">继续阅读</a></div>
                            
             </div>
         
@@ -180,14 +188,13 @@
                
             <div class="read-more-item">
                 <span class="read-more-item-dim">更早的文章</span>
-                <h2 class="post-list__post-title post-title"><a href="/2017/03/10/10Java集合07-ArrayDeque/" title=""></a></h2>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/20/数据结构-红黑树/" title=""></a></h2>
                 <p class="excerpt">
                 
-                前言Java里有一个叫做Stack的类，却没有叫做Queue的类(它只是一个接口)。当使用栈时，Java已不推荐使用Stack，而是推荐使用更高效的ArrayDeque；既然Queue只是一个接口，当需要使用队列时也就首选ArrayDeque(次选是LinkedList)
-Deque与ArrayDe
+                
                 &hellip;
                 </p>
-                <div class="post-list__meta"><time datetime="2017-03-10T00:53:48.721Z" class="post-list__meta--date date">2017-03-09</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/10/10Java集合07-ArrayDeque/">继续阅读</a></div>
+                <div class="post-list__meta"><time datetime="2017-03-20T09:59:16.518Z" class="post-list__meta--date date">2017-03-20</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/20/数据结构-红黑树/">继续阅读</a></div>
                        
             </div>
         

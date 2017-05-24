@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Little Piggy</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="Android">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Little Piggy">
+    <meta name="twitter:description" content="Android">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Little Piggy">
+    <meta property="og:description" content="Android">
+
+    
+    <meta name="author" content="Jerry">
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+    <link rel="alternate" type="application/rss+xml" title="Little Piggy" href="/atom.xml">
+    
+
+    <link rel="canonical" href="http://yoursite.com/2017/03/23/Handler和内部类引起的内存泄漏/"/>
+
+    
+      
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Little Piggy 的主页"><img src="/images/avatar.jpg" width="80" alt="Little Piggy logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Little Piggy">Little Piggy</a></h1>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">Android</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+              <li class="navigation__item"><a href="/favourite">黄金屋</a></li>
+            
+              <li class="navigation__item"><a href="/favourite/time.html">时光机</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/monniya" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  <li class="navigation__item">
+    <a href="https://twitter.com/onlymonniya" title="上Twitter找我" target="_blank">
+      <i class='social fa fa-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+
+  
+
+  <li class="navigation__item">
+    <a href="/atom.xml" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2017-03-23T02:58:39.191Z" class="post-list__meta--date date">2017-03-22</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title"></h1>
+  </header>
+
+  <section class="post">
+    <h1 id="Handler和内部类怎么引起内存泄漏？"><a href="#Handler和内部类怎么引起内存泄漏？" class="headerlink" title="Handler和内部类怎么引起内存泄漏？"></a>Handler和内部类怎么引起内存泄漏？</h1><p>先看下面一段代码：</p>
+<pre><code>public class SampleActivity extends Activity {
+
+  private final Handler mLeakyHandler = new Handler() {
+    @Override
+    public void handleMessage(Message msg) {
+      // ... 
+    }
+  };
+}
+</code></pre><p>我们平时使用Handler的时候，相信很多人都会这样写一个Handler。但是这样会引起内存泄漏。Android Lint也会给出下面的警告：</p>
+<pre><code>In Android, Handler classes should be static or leaks might occur.
+</code></pre><p>那么，这块代码的内存泄漏究竟怎么引起呢?先看以下几个知识点：</p>
+<ul>
+<li>当一个Android应用第一次启动的时候，Framework会为整个应用程序的主线程创建一个<code>Looper</code>对象，一个<code>Looper</code>对象维护了一个<code>message queue</code>消息队列，并且<code>Looper</code>对象会去一个一个的去轮询消息队列里的<code>Message</code>消息对象。应用程序框架的所有主要事件(例如，Activity生命周期方法的回调，一个Button的点击事件等)都会被一个<code>Message</code>对象持有，并添加到<code>Looper</code>的<code>message queue</code>中被一个接一个地去处理。主线程中的<code>Looper</code>对象的生命周期贯穿整个应用的生命周期。</li>
+<li>当一个<code>Handler</code>在主线程被创建，它就和<code>Looper</code>以及<code>Looper</code>所对应的<code>MessageQueue</code>关联起来了，被这个<code>Handler</code>对象<code>send</code>到<code>message queue</code>中的所有<code>Message</code>对象都会持有这个<code>Handler</code>对象的引用，正因为如此<code>framework</code>才可以去调用相应<code>Handler</code>的<code>handleMessage(Message)</code>方法去处理相应的消息。这句比较拗口，<code>Handler</code>对象<code>send</code>一个<code>Message</code>对象的时候，会将<code>Handler</code>自身赋值给<code>Message</code>的<code>target</code>属性，处理该消息的时候会取出该<code>target</code>并调用它的<code>handleMessage(Message)</code>方法去处理，所以每个<code>Message</code>对象都会持有<code>send</code>它的那个<code>Handler</code>对象的引用。</li>
+<li>在Java中，非静态的内部类和匿名内部类都会隐式的持有它们外部类的引用；而静态内部类不会。</li>
+</ul>
+<p>知道了以上几个知识点，就可以去检查哪里会出现内存泄漏了，再看下面的代码：</p>
+<pre><code>public class SampleActivity extends Activity {
+
+  private final Handler mLeakyHandler = new Handler() {
+    @Override
+    public void handleMessage(Message msg) {
+      // ...
+    }
+  };
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    // Post a message and delay its execution for 10 minutes.
+    mLeakyHandler.postDelayed(new Runnable() {
+      @Override
+      public void run() { /* ... */ }
+    }, 1000 * 60 * 10);
+
+    // Go back to the previous Activity.
+    finish();
+  }
+}
+</code></pre><p>当这个<code>Activity</code>被<code>finish</code>掉的时候，<code>Handler</code>发送的这个<code>Message</code>会继续在主线程的<code>message queue</code>中存在<code>1000*60*10ms</code>才会被处理掉。这个<code>Message</code>持有了<code>activity</code>中<code>Handler</code>对象的引用，并且<code>Handler</code>内部类又隐式地持有它的外部类<code>SampleActivity</code>的引用，在<code>Message</code>被处理之前，这个引用链会一直存在，从而会阻止<code>activity</code>的<code>context</code>被垃圾回收器回收，这样就会导致这个<code>activity</code>引用的所有<code>resources</code>造成内存泄漏。(<code>Message</code>被处理掉之后，再遇到GC，该<code>Message</code>对象就会被回收，其引用的<code>Handler</code>对象也会被回收，相应的<code>activity</code>也就可以被回收了，如果没有其他引用继续引用它时)。代码中的<code>new Runnable</code>也是同理。非静态的匿名内部类也会隐式地持有外部类的引用，也会造成内存泄漏。</p>
+<h1 id="解决这种情况造成的内存泄漏"><a href="#解决这种情况造成的内存泄漏" class="headerlink" title="解决这种情况造成的内存泄漏"></a>解决这种情况造成的内存泄漏</h1><p>要解决这个问题，可以在单独的<code>java</code>文件里去写一个类继承<code>Handler</code>或者将<code>Handler</code>内部类声明为<code>static</code>，<code>static</code>修饰的内部类不会持有外部类的引用，也不会造成<code>activity</code>的泄漏。如果你要在内部类中调用<code>activity</code>的方法，可以使用<code>Activity</code>的<code>WeakReference</code>。要解决匿名内部类<code>Runnable</code>造成的内存泄漏，我们可以将该匿名内部类声明为<code>activity</code>的静态属性(匿名内部类的静态实例不会持有外部类的引用)。</p>
+<pre><code>public class SampleActivity extends Activity {
+
+  /**
+   * Instances of static inner classes do not hold an implicit
+   * reference to their outer class.
+   */
+  private static class MyHandler extends Handler {
+    private final WeakReference&lt;SampleActivity&gt; mActivity;
+
+    public MyHandler(SampleActivity activity) {
+      mActivity = new WeakReference&lt;SampleActivity&gt;(activity);
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
+      SampleActivity activity = mActivity.get();
+      if (activity != null) {
+        // ...
+      }
+    }
+  }
+
+  private final MyHandler mHandler = new MyHandler(this);
+
+  /**
+   * Instances of anonymous classes do not hold an implicit
+   * reference to their outer class when they are &quot;static&quot;.
+   */
+  private static final Runnable sRunnable = new Runnable() {
+      @Override
+      public void run() { /* ... */ }
+  };
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    // Post a message and delay its execution for 10 minutes.
+    mHandler.postDelayed(sRunnable, 1000 * 60 * 10);
+
+    // Go back to the previous Activity.
+    finish();
+  }
+}
+</code></pre><p>静态内部类和非静态内部类的区别很微妙，也是每一个Android程序员应该明白的。</p>
+<h2 id="使用Activity的生命周期函数解除引用"><a href="#使用Activity的生命周期函数解除引用" class="headerlink" title="使用Activity的生命周期函数解除引用"></a>使用Activity的生命周期函数解除引用</h2><p>就是在<code>Activity</code>的<code>onPause</code>、<code>onStop</code>或<code>onDestroy</code>中<code>remove</code>掉相应的<code>message</code>或<code>callback</code>。</p>
+<h2 id="结论："><a href="#结论：" class="headerlink" title="结论："></a>结论：</h2><p><strong>如果一个内部类的实例的生命周期比Activity的生命周期长，就避免使用非静态的内部类，改用静态内部类。</strong></p>
+<h2 id="附：静态变量和静态内部类"><a href="#附：静态变量和静态内部类" class="headerlink" title="附：静态变量和静态内部类"></a>附：静态变量和静态内部类</h2><p><code>static</code>关键字在静态变量和静态类中的作用不同。</p>
+<p>静态变量意思是该变量属于该类的所有实例，当该类的一个实例被GC回收掉之后，它并不会被GC回收掉，它会一直存在于内存中，直到你显示地给它赋值为null。把一个Drawable对象设置成<code>static</code>修饰的，因为一个<code>Drawable</code>对象往往会持有一个<code>View</code>的引用，而<code>View</code>对象往往又会持有<code>activity</code>的引用，所以一个<code>static</code>的<code>Drawable</code>对象会强制使<code>activity</code>在被销毁后还要在内存中存在，除非你显示地将<code>Drawable</code>置为空。</p>
+<p><code>static</code>修饰的class和<code>static</code>修饰的变量意义不同。<code>static</code>修饰的内部类就像在单独的<code>.java</code>文件中声明的类一样；一个非静态的内部类则和它的外部类有隐式的关联，一个非静态内部类的实例不能脱离了外部类的实例而单独存在。</p>
+<p>总之记住一句话，在<code>activity</code>内部如果要使用内部类，尽量使用<code>static</code>，成员变量尽量少用<code>static</code></p>
+<p><a href="http://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html" target="_blank" rel="external">How to Leak a Context: Handlers &amp; Inner Classes</a></p>
+<p><a href="http://stackoverflow.com/questions/13560243/how-to-stop-runnable-when-the-app-goes-to-background/13560296#13560296" target="_blank" rel="external">How to stop runnable when the app goes to background?</a></p>
+
+  </section>
+
+</article>
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/23/Android内存管理方式/" title=""></a></h2>
+                <p class="excerpt">
+                
+                一个APP通常就是一个进程对应一个虚拟机查看手机中所有进程Android手机的底层是Linux系统，一个Android APP运行在一个Dalvik虚拟机里面 ，这个虚拟机对应Linux下的一个进程。
+那就看一下手机上有哪些进程吧。
+先进入shell：
+
+使用ps命令列出所有的进程：
+
+
+USER指
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-23T10:47:39.037Z" class="post-list__meta--date date">2017-03-23</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/23/Android内存管理方式/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/21/16Java集合ConcurrentHashMap/" title=""></a></h2>
+                <p class="excerpt">
+                
+                ConcurrentHashMap的实现原理概述我们之前了解到关于HashMap和Hashtable这两种集合。其中HashMap是非线程安全的，当我们只有一个线程在使用HashMap的时候，自然不会有问题，但如果涉及到多个线程，并且有读有写的过程中，HashMap就不能满足我们的需要了(fail-
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-21T05:26:33.034Z" class="post-list__meta--date date">2017-03-21</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/21/16Java集合ConcurrentHashMap/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+            
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    <span class="footer__copyright">
+        基于 <a href="http://hexo.io">Hexo</a> 搭建，感谢 <a href="https://pages.github.com/">GitHub Pages</a> 提供免费的托管服务
+    </span>
+    <span class="footer__copyright">
+        &copy; 2017 - 本站由 <a href="/">@Monniya</a> 创建,
+        使用 <a href="https://github.com/monniya/hexo-theme-new-vno ">hexo-theme-new-vno</a> 主题,
+        修改自 <a href="https://github.com/lenbo-ma/hexo-theme-vno" target="_blank">Vno</a>, 原创出自<a href="http://github.com/onevcat/vno" target="_blank">onevcat</a>
+    </span>
+</footer>
+        </div>
+    </div>
+
+    
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+    
+    </script>
+    
+</body>
+</html>

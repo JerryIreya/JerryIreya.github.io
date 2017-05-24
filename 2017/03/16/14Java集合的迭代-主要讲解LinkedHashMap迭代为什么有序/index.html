@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Little Piggy</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="Android">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Little Piggy">
+    <meta name="twitter:description" content="Android">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Little Piggy">
+    <meta property="og:description" content="Android">
+
+    
+    <meta name="author" content="Jerry">
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+    <link rel="alternate" type="application/rss+xml" title="Little Piggy" href="/atom.xml">
+    
+
+    <link rel="canonical" href="http://yoursite.com/2017/03/16/14Java集合的迭代-主要讲解LinkedHashMap迭代为什么有序/"/>
+
+    
+      
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Little Piggy 的主页"><img src="/images/avatar.jpg" width="80" alt="Little Piggy logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Little Piggy">Little Piggy</a></h1>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">Android</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+              <li class="navigation__item"><a href="/favourite">黄金屋</a></li>
+            
+              <li class="navigation__item"><a href="/favourite/time.html">时光机</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/monniya" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  <li class="navigation__item">
+    <a href="https://twitter.com/onlymonniya" title="上Twitter找我" target="_blank">
+      <i class='social fa fa-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+
+  
+
+  <li class="navigation__item">
+    <a href="/atom.xml" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2017-03-16T02:39:13.613Z" class="post-list__meta--date date">2017-03-15</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title"></h1>
+  </header>
+
+  <section class="post">
+    <h1 id="Collection的迭代"><a href="#Collection的迭代" class="headerlink" title="Collection的迭代"></a>Collection的迭代</h1><p>Collection接口继承了Iterable接口，Iterable接口中有一个iterator()方法，用于获取集合的迭代器：</p>
+<pre><code>public interface Iterable&lt;T&gt; {
+
+    Iterator&lt;E&gt; iterator();
+
+}    
+</code></pre><p>Iterator接口：</p>
+<pre><code>public interface Iterator&lt;E&gt; {
+    boolean hasNext();
+    E next();
+    void remove();
+}
+</code></pre><p>所以，所有的Collection的实现类都有一个iterator方法，用来返回不同的Iterator的实现类对象。</p>
+<h1 id="ArrayList的iterator返回的迭代器对象"><a href="#ArrayList的iterator返回的迭代器对象" class="headerlink" title="ArrayList的iterator返回的迭代器对象"></a>ArrayList的iterator返回的迭代器对象</h1><p>ArrayList的iterator返回的是ArrayList的内部类Itr的对象，Itr实现了Iterator接口。</p>
+<p>Itr的源码：</p>
+<pre><code>/**
+ * An optimized version of AbstractList.Itr
+ * AbstractList中也有一个Iterator的实现类Itr，ArrayList中的Itr根据ArrayList的数据结构特点，
+ * 相对于AbstractList中的Itr有了优化，所以这就是为什么父类中已经有了Iterator的实现类了在子类中还要重复去实现。
+ * 具体的优化，从代码中可以看出，尤其是next方法，用的是数组的随机取出的方式。
+ */
+private class Itr implements Iterator&lt;E&gt; {
+    // The &quot;limit&quot; of this iterator. This is the size of the list at the time the
+    // iterator was created. Adding &amp; removing elements will invalidate the iteration
+    // anyway (and cause next() to throw) so saving this value will guarantee that the
+    // value of hasNext() remains stable and won&apos;t flap between true and false when elements
+    // are added and removed from the list.
+    //最大长度
+    protected int limit = ArrayList.this.size;
+
+    //下一个要返回的元素的index
+    int cursor;       // index of next element to return
+    //最后一个返回的元素的index
+    int lastRet = -1; // index of last element returned; -1 if no such
+    int expectedModCount = modCount;
+
+    public boolean hasNext() {
+        return cursor &lt; limit;
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public E next() {
+        if (modCount != expectedModCount)
+            throw new ConcurrentModificationException();
+        int i = cursor;
+        if (i &gt;= limit)
+            throw new NoSuchElementException();
+        Object[] elementData = ArrayList.this.elementData;
+        if (i &gt;= elementData.length)
+            throw new ConcurrentModificationException();
+        cursor = i + 1;
+        return (E) elementData[lastRet = i];
+    }
+
+    public void remove() {
+        if (lastRet &lt; 0)
+            throw new IllegalStateException();
+        if (modCount != expectedModCount)
+            throw new ConcurrentModificationException();
+
+        try {
+            ArrayList.this.remove(lastRet);
+            cursor = lastRet;
+            lastRet = -1;
+            expectedModCount = modCount;
+            limit--;
+        } catch (IndexOutOfBoundsException ex) {
+            throw new ConcurrentModificationException();
+        }
+    }
+}
+</code></pre><h1 id="ArrayList的listIterator方法"><a href="#ArrayList的listIterator方法" class="headerlink" title="ArrayList的listIterator方法"></a>ArrayList的listIterator方法</h1><p>ArrayList的listIterator方法返回的是ArrayList的内部类ListItr的对象，ListItr继承自Itr并实现了ListIterator接口。</p>
+<p>ListItr源码：</p>
+<pre><code>/**
+ * An optimized version of AbstractList.ListItr
+ * AbstractList中也有一个实现了ListIterator的内部类ListItr，ArrayList中的ListItr根据ArrayList的数据结构的特点，
+ * 相对于AbstractList中的ListItr做了优化，这就是为什么在父类中已经有一个ListIterator的实现类了，在子类中还要重复实现。
+ * 具体的优化，可以从代码中看出来，尤其是previous方法和next方法(next方法在父类Itr里)
+ * ListItr的hasNext、next、remove方法都是继承了父类Itr的，所以这里没有重复写。
+ */
+private class ListItr extends Itr implements ListIterator&lt;E&gt; {
+    ListItr(int index) {
+        super();
+        //cursor已经在父类Itr中定义过了，就是next要返回的元素的index
+        cursor = index;
+    }
+
+    public boolean hasPrevious() {
+        return cursor != 0;
+    }
+
+    public int nextIndex() {
+        return cursor;
+    }
+
+    public int previousIndex() {
+        return cursor - 1;
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public E previous() {
+        if (modCount != expectedModCount)
+            throw new ConcurrentModificationException();
+        int i = cursor - 1;
+        if (i &lt; 0)
+            throw new NoSuchElementException();
+        Object[] elementData = ArrayList.this.elementData;
+        if (i &gt;= elementData.length)
+            throw new ConcurrentModificationException();
+        cursor = i;
+        return (E) elementData[lastRet = i];
+    }
+
+    public void set(E e) {
+        if (lastRet &lt; 0)
+            throw new IllegalStateException();
+        if (modCount != expectedModCount)
+            throw new ConcurrentModificationException();
+
+        try {
+            ArrayList.this.set(lastRet, e);
+        } catch (IndexOutOfBoundsException ex) {
+            throw new ConcurrentModificationException();
+        }
+    }
+
+    public void add(E e) {
+        if (modCount != expectedModCount)
+            throw new ConcurrentModificationException();
+
+        try {
+            int i = cursor;
+            ArrayList.this.add(i, e);
+            cursor = i + 1;
+            lastRet = -1;
+            expectedModCount = modCount;
+            limit++;
+        } catch (IndexOutOfBoundsException ex) {
+            throw new ConcurrentModificationException();
+        }
+    }
+}
+</code></pre><h1 id="LinkedList的iterator方法"><a href="#LinkedList的iterator方法" class="headerlink" title="LinkedList的iterator方法"></a>LinkedList的iterator方法</h1><p>LinkedListt中没有iterator方法，所以会去调用父类的iterator方法，</p>
+<p>AbstractSequentialList的iterator方法：</p>
+<pre><code>public Iterator&lt;E&gt; iterator() {
+    return listIterator();
+}
+</code></pre><p>iterator方法中调用listIterator()方法，首先去子类中去找，子类LinkedList中没有listIterator方法，所以在本类中找，本类中也没有，所以就去父类AbstractList中去找。</p>
+<p>AbstractList中的listIterator()方法：</p>
+<pre><code>public ListIterator&lt;E&gt; listIterator() {
+    return listIterator(0);
+}
+</code></pre><p>listIterator()方法中调用listIterator(int) 方法，先去子类LinkedList中去找，LinkedList中listIterator(int index)方法：</p>
+<pre><code>public ListIterator&lt;E&gt; listIterator(int index) {
+    checkPositionIndex(index);
+    return new ListItr(index);
+}
+</code></pre><p>所以LinkedList的iterator()方法返回的是ListIter的对象，并作为Iterator类型返回的，所以只能使用hasNext、next和remove方法：</p>
+<p>ListIter的源码：</p>
+<pre><code>private class ListItr implements ListIterator&lt;E&gt; {
+    private Node&lt;E&gt; lastReturned = null;
+    private Node&lt;E&gt; next;
+    private int nextIndex;
+    private int expectedModCount = modCount;
+
+    ListItr(int index) {
+        // assert isPositionIndex(index);
+        next = (index == size) ? null : node(index);
+        nextIndex = index;
+    }
+
+    public boolean hasNext() {
+        return nextIndex &lt; size;
+    }
+
+    public E next() {
+        checkForComodification();
+        if (!hasNext())
+            throw new NoSuchElementException();
+
+        //记录最有一次返回的元素的Node节点
+        lastReturned = next;
+        //next向后移一位
+        next = next.next;
+        //记录虚拟的索引
+        nextIndex++;
+        return lastReturned.item;
+    }
+
+    public boolean hasPrevious() {
+        return nextIndex &gt; 0;
+    }
+
+    public E previous() {
+        checkForComodification();
+        if (!hasPrevious())
+            throw new NoSuchElementException();
+
+        lastReturned = next = (next == null) ? last : next.prev;
+        nextIndex--;
+        return lastReturned.item;
+    }
+
+    public int nextIndex() {
+        return nextIndex;
+    }
+
+    public int previousIndex() {
+        return nextIndex - 1;
+    }
+
+    public void remove() {
+        checkForComodification();
+        if (lastReturned == null)
+            throw new IllegalStateException();
+
+        Node&lt;E&gt; lastNext = lastReturned.next;
+        unlink(lastReturned);
+        if (next == lastReturned)
+            next = lastNext;
+        else
+            nextIndex--;
+        lastReturned = null;
+        expectedModCount++;
+    }
+
+    public void set(E e) {
+        if (lastReturned == null)
+            throw new IllegalStateException();
+        checkForComodification();
+        lastReturned.item = e;
+    }
+
+    public void add(E e) {
+        checkForComodification();
+        lastReturned = null;
+        if (next == null)
+            linkLast(e);
+        else
+            linkBefore(e, next);
+        nextIndex++;
+        expectedModCount++;
+    }
+
+    final void checkForComodification() {
+        if (modCount != expectedModCount)
+            throw new ConcurrentModificationException();
+    }
+}
+</code></pre><h1 id="LinkedList的listIterator方法"><a href="#LinkedList的listIterator方法" class="headerlink" title="LinkedList的listIterator方法"></a>LinkedList的listIterator方法</h1><p>上一节已经说了，LinkedList中没有listIterator方法，其父类AbstractSequentialList中也没有，所以会去调用AbstractList中的listIterator方法，listIterator方法又去调用LinkedList中的listIterator(int index)方法，所以LinkedList的listIterator方法和iterator方法返回的对象是一样的，只不过是类型不一样。iterator方法返回的是Iterator类型的，只能用hasNext、next、remove方法；listIterator方法返回的是ListIterator类型的，除了可以使用hasNext、next、remove方法还可以使用hasPrevious、previous、set、add等方法。</p>
+<h1 id="HashMap的遍历"><a href="#HashMap的遍历" class="headerlink" title="HashMap的遍历"></a>HashMap的遍历</h1><p>Map的遍历和Collection不同，Collection可以直接调用iterator或者listIterator(List系列特有)方法得到一个迭代器对象然后去遍历集合；Map只能借助于Collection去遍历。</p>
+<p>顶级Map接口有三种遍历：</p>
+<ul>
+<li>keySet  – 得到的是所有key的Set集合</li>
+<li>values  – 得到的是所有value的Collection集合</li>
+<li>entrySet – 得到的是所有Entry的Set集合</li>
+</ul>
+<h2 id="HashMap的keySet、value、entrySet"><a href="#HashMap的keySet、value、entrySet" class="headerlink" title="HashMap的keySet、value、entrySet"></a>HashMap的keySet、value、entrySet</h2><p>keySet方法源码：</p>
+<pre><code>public Set&lt;K&gt; keySet() {
+    Set&lt;K&gt; ks = keySet;
+    return (ks != null ? ks : (keySet = new KeySet()));
+}
+</code></pre><p>keySet返回的是KeySet对象，KeySet类源码：</p>
+<pre><code>private final class KeySet extends AbstractSet&lt;K&gt; {
+    public Iterator&lt;K&gt; iterator() {
+        return newKeyIterator();
+    }
+    public int size() {
+        return size;
+    }
+    public boolean contains(Object o) {
+        return containsKey(o);
+    }
+    public boolean remove(Object o) {
+        return HashMap.this.removeEntryForKey(o) != null;
+    }
+    public void clear() {
+        HashMap.this.clear();
+    }
+    public final Spliterator&lt;K&gt; spliterator() {
+        return new KeySpliterator&lt;&gt;(HashMap.this, 0, -1, 0, 0);
+    }
+}
+</code></pre><p>我们遍历Map的时候首先得到keySet的Set集合，然后调用集合的iterator()方法去得到迭代器，所以KeySet的iterator()方法是使用keySet遍历Map的关键：</p>
+<pre><code>public Iterator&lt;K&gt; iterator() {
+        return newKeyIterator();
+    }
+</code></pre><p>调用的是newKeyIterator()方法：</p>
+<pre><code>// Subclass overrides these to alter behavior of views&apos; iterator() method
+//子类重写这个方法去改变相应的iterator方式
+Iterator&lt;K&gt; newKeyIterator()   {
+    return new KeyIterator();
+}
+</code></pre><p>该方法返回的是KeyIterator的对象，KeyIterator类源码：</p>
+<pre><code>private final class KeyIterator extends HashIterator&lt;K&gt; {
+    public K next() {
+        return nextEntry().getKey();
+    }
+}
+</code></pre><p>啊偶！KeyIterator继承自HashIterator，并重写了next方法，这里next方法返回的是<code>nextEntry().getKey()</code>。那就看看HashIterator类的源码吧：</p>
+<pre><code>private abstract class HashIterator&lt;E&gt; implements Iterator&lt;E&gt; {
+    HashMapEntry&lt;K,V&gt; next;        // next entry to return
+    int expectedModCount;   // For fast-fail
+    int index;              // current slot
+    HashMapEntry&lt;K,V&gt; current;     // current entry
+
+    HashIterator() {
+        expectedModCount = modCount;
+        if (size &gt; 0) { // advance to first entry
+            HashMapEntry[] t = table;
+            while (index &lt; t.length &amp;&amp; (next = t[index++]) == null)
+                ;
+        }
+    }
+
+    public final boolean hasNext() {
+        return next != null;
+    }
+
+    //重点方法！！！！
+    final Entry&lt;K,V&gt; nextEntry() {
+        if (modCount != expectedModCount)
+            throw new ConcurrentModificationException();
+        HashMapEntry&lt;K,V&gt; e = next;
+        if (e == null)
+            throw new NoSuchElementException();
+
+        if ((next = e.next) == null) {
+            HashMapEntry[] t = table;
+            while (index &lt; t.length &amp;&amp; (next = t[index++]) == null)
+                ;
+        }
+        current = e;
+        return e;
+    }
+
+    public void remove() {
+        if (current == null)
+            throw new IllegalStateException();
+        if (modCount != expectedModCount)
+            throw new ConcurrentModificationException();
+        Object k = current.key;
+        current = null;
+        HashMap.this.removeEntryForKey(k);
+        expectedModCount = modCount;
+    }
+}
+</code></pre><p>哈哈，这个类没有实现next方法，因为该类是抽象类。</p>
+<p>其实HashMap中的keySet、values、entrySet方式遍历的迭代器都是该类的实现类的对象。先看看values()和entrySet()方法，稍后一起总结。</p>
+<p>values()方法源码：</p>
+<pre><code>public Collection&lt;V&gt; values() {
+    Collection&lt;V&gt; vs = values;
+    return (vs != null ? vs : (values = new Values()));
+}
+</code></pre><p>是不是和keySet()相似！</p>
+<p>Values类源码：</p>
+<pre><code>private final class Values extends AbstractCollection&lt;V&gt; {
+    public Iterator&lt;V&gt; iterator() {
+        return newValueIterator();
+    }
+    public int size() {
+        return size;
+    }
+    public boolean contains(Object o) {
+        return containsValue(o);
+    }
+    public void clear() {
+        HashMap.this.clear();
+    }
+    public final Spliterator&lt;V&gt; spliterator() {
+        return new ValueSpliterator&lt;&gt;(HashMap.this, 0, -1, 0, 0);
+    }
+}
+</code></pre><p>是不是和KeySet类很相似！！</p>
+<p>newValueIterator()方法源码：</p>
+<pre><code>// Subclass overrides these to alter behavior of views&apos; iterator() method
+Iterator&lt;V&gt; newValueIterator()   {
+    return new ValueIterator();
+}
+</code></pre><p>有没有和newKeyIterator()方法很相似！！！</p>
+<p>ValueIterator类源码：</p>
+<pre><code>private final class ValueIterator extends HashIterator&lt;V&gt; {
+    public V next() {
+        return nextEntry().getValue();
+    }
+}
+</code></pre><p>有没有和KeyIterator类很相似！！！！就TM一个next方法不一样(记住)，这里next方法返回的是<code>nextEntry().getValue().</code></p>
+<p>entrySet()方法源码：</p>
+<pre><code>public Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet() {
+    return entrySet0();
+}
+
+private Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet0() {
+    Set&lt;Map.Entry&lt;K,V&gt;&gt; es = entrySet;
+    return es != null ? es : (entrySet = new EntrySet());
+}
+</code></pre><p>有没有和keySet()和values()方法很相似！除了多一层调用。</p>
+<p>EntrySet类源码：</p>
+<pre><code>private final class EntrySet extends AbstractSet&lt;Map.Entry&lt;K,V&gt;&gt; {
+    public Iterator&lt;Map.Entry&lt;K,V&gt;&gt; iterator() {
+        return newEntryIterator();
+    }
+    public boolean contains(Object o) {
+        if (!(o instanceof Map.Entry))
+            return false;
+        Map.Entry&lt;K,V&gt; e = (Map.Entry&lt;K,V&gt;) o;
+        Entry&lt;K,V&gt; candidate = getEntry(e.getKey());
+        return candidate != null &amp;&amp; candidate.equals(e);
+    }
+    public boolean remove(Object o) {
+        return removeMapping(o) != null;
+    }
+    public int size() {
+        return size;
+    }
+    public void clear() {
+        HashMap.this.clear();
+    }
+    public final Spliterator&lt;Map.Entry&lt;K,V&gt;&gt; spliterator() {
+        return new EntrySpliterator&lt;&gt;(HashMap.this, 0, -1, 0, 0);
+    }
+}
+</code></pre><p>哈哈，你已经知道我要说什么了，是不是和KeySet和Values类很相似！！！</p>
+<p>newEntryIterator()方法源码：</p>
+<pre><code>// Subclass overrides these to alter behavior of views&apos; iterator() method
+Iterator&lt;Map.Entry&lt;K,V&gt;&gt; newEntryIterator()   {
+    return new EntryIterator();
+}
+</code></pre><p>有没有和newKeyIterator()和newValueIterator()方法很相似！！！！</p>
+<p>EntryIterator类源码：</p>
+<pre><code>private final class EntryIterator extends HashIterator&lt;Map.Entry&lt;K,V&gt;&gt; {
+    public Map.Entry&lt;K,V&gt; next() {
+        return nextEntry();
+    }
+}
+</code></pre><p>同样继承HashIterator类，next方法返回的是nextEntry()。</p>
+<p>到此为止，总结出的经验就是：</p>
+<p>1、keySet()、values()、entrySet()去遍历HashMap的时候，keySet()得到的是一个所有key的Set集合；values()得到的是一个所有value的Collection集合(为什么是Collection而不是List呢？因为怕你去调list的listIterator方法，values()方法得到的集合不支持previous、hasPrevious等操作)；entrySet()得到的是一个所有entry的Set集合。这三种方式不管使用的是哪一种，调用iterator()方法的时候获取的都是HashIterator的对象，唯一差别就是next()方法的返回值，具体看上边代码分析。</p>
+<p>2、如果要遍历整个HashMap中的键值对，推荐使用entrySet(),因为entrySet的迭代器的next()方法返回的直接是Entry对象，通过Entry对象就可以获取到key和value。如果使用keySet()，它的迭代器对象的next()方法通过nextEntry()方法得到Entry对象，然后再去得到key，你如果还想取value的话，还要调用HashMap的get(Object key)方法去获取value，麻烦、消耗不必要的性能；如果使用values()，那你就获取不到相应的key。</p>
+<p>3、HashMap的子类如果因为数据结构的原因不能使用HashMap提供的迭代方式的话(HashMap的迭代方式重点看HashIterator源码中的nextEntry()方法。)，子类可以重写newKeyIterator、newValueIterator、newEntryIterator方法。下面要讲的LinkedHashMap就是这样。</p>
+<h2 id="LinkedHashMap的迭代"><a href="#LinkedHashMap的迭代" class="headerlink" title="LinkedHashMap的迭代"></a>LinkedHashMap的迭代</h2><p>LinkedHashMap的keySet()、values()、entrySet()方法都没有重写，都是继承自HashMap的，LinkedHashMap重写了newKeyIterator、newValueIterator、newEntryIterator方法。</p>
+<pre><code>// These Overrides alter the behavior of superclass view iterator() methods
+Iterator&lt;K&gt; newKeyIterator()   { return new KeyIterator();   }
+Iterator&lt;V&gt; newValueIterator() { return new ValueIterator(); }
+Iterator&lt;Map.Entry&lt;K,V&gt;&gt; newEntryIterator() { return new EntryIterator(); }
+</code></pre><p>虽然newKeyIterator方法返回的还是KeyIterator对象，但是这个KeyIterator已经不是HashMap中的那个KeyIterator了，其他两个方法同理：</p>
+<pre><code>private class KeyIterator extends LinkedHashIterator&lt;K&gt; {
+    public K next() { return nextEntry().getKey(); }
+}
+
+private class ValueIterator extends LinkedHashIterator&lt;V&gt; {
+    public V next() { return nextEntry().getValue(); }
+}
+
+private class EntryIterator extends LinkedHashIterator&lt;Map.Entry&lt;K,V&gt;&gt; {
+    public Map.Entry&lt;K,V&gt; next() { return nextEntry(); }
+}
+</code></pre><p>看到没，这三个类都继承的是LinkedHashIterator，并重写了next()方法，看看LinkedHashIterator类吧：</p>
+<pre><code>private abstract class LinkedHashIterator&lt;T&gt; implements Iterator&lt;T&gt; {
+    LinkedHashMapEntry&lt;K,V&gt; nextEntry    = header.after;
+    LinkedHashMapEntry&lt;K,V&gt; lastReturned = null;
+
+    /**
+     * The modCount value that the iterator believes that the backing
+     * List should have.  If this expectation is violated, the iterator
+     * has detected concurrent modification.
+     */
+    int expectedModCount = modCount;
+
+    public boolean hasNext() {
+        return nextEntry != header;
+    }
+
+    public void remove() {
+        if (lastReturned == null)
+            throw new IllegalStateException();
+        if (modCount != expectedModCount)
+            throw new ConcurrentModificationException();
+
+        LinkedHashMap.this.remove(lastReturned.key);
+        lastReturned = null;
+        expectedModCount = modCount;
+    }
+
+    Entry&lt;K,V&gt; nextEntry() {
+        if (modCount != expectedModCount)
+            throw new ConcurrentModificationException();
+        if (nextEntry == header)
+            throw new NoSuchElementException();
+
+        LinkedHashMapEntry&lt;K,V&gt; e = lastReturned = nextEntry;
+        nextEntry = e.after;
+        return e;
+    }
+}
+</code></pre><p>大家都知道LinkedHashMap遍历和HashMap不同的是，LinkedHashMap的遍历是有顺序的(和插入顺序或访问顺序一致，具体看accessOrder是true还是false)，具体实现逻辑就是LinkedHashIterator来实现的。请看nextEntry方法。</p>
+<p>这篇文章就是为了解答一个疑问：</p>
+<pre><code>LinkedHashMap的顺序遍历是如何实现的。
+</code></pre><p>答案就是遍历操作使用的是LinkedHashMap中的双链表结构去遍历的。</p>
+<pre><code>get(Object key)方法为什么不通过双链表结构去查询呢？
+</code></pre><p>答案：是检索双向链表快还是检索哈希表快？</p>
+
+  </section>
+
+</article>
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/17/15Java集合TreeMap/" title=""></a></h2>
+                <p class="excerpt">
+                
+                TreeMappublic class TreeMap&amp;lt;K,V&amp;gt;
+extends AbstractMap&amp;lt;K,V&amp;gt;
+implements NavigableMap&amp;lt;K,V&amp;gt;, Cloneable, java.io.Serializable
+NavigableMap
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-17T08:32:38.723Z" class="post-list__meta--date date">2017-03-17</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/17/15Java集合TreeMap/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/03/15/13Java集合10-LinkedHashMap/" title=""></a></h2>
+                <p class="excerpt">
+                
+                LinkedHashMap总体介绍public class LinkedHashMap&amp;lt;K,V&amp;gt;
+    extends HashMap&amp;lt;K,V&amp;gt;
+    implements Map&amp;lt;K,V&amp;gt;
+LinkedHashMap实现了Map接口，继承了HashMap，既
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-03-15T08:22:14.225Z" class="post-list__meta--date date">2017-03-15</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/03/15/13Java集合10-LinkedHashMap/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+            
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    <span class="footer__copyright">
+        基于 <a href="http://hexo.io">Hexo</a> 搭建，感谢 <a href="https://pages.github.com/">GitHub Pages</a> 提供免费的托管服务
+    </span>
+    <span class="footer__copyright">
+        &copy; 2017 - 本站由 <a href="/">@Monniya</a> 创建,
+        使用 <a href="https://github.com/monniya/hexo-theme-new-vno ">hexo-theme-new-vno</a> 主题,
+        修改自 <a href="https://github.com/lenbo-ma/hexo-theme-vno" target="_blank">Vno</a>, 原创出自<a href="http://github.com/onevcat/vno" target="_blank">onevcat</a>
+    </span>
+</footer>
+        </div>
+    </div>
+
+    
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+    
+    </script>
+    
+</body>
+</html>
